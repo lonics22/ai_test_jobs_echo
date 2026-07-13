@@ -1,0 +1,207 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "AI 测试效能平台 - 登录注册模块",
+    "description": "仅包含用户注册与登录接口",
+    "version": "1.0.0",
+    "contact": {
+      "email": "admin@example.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:5000",
+      "description": "本地开发服务器"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "登录后获取 token，格式: Authorization: Bearer <token>"
+      }
+    },
+    "schemas": {
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "integer", "description": "状态码，200 成功，-1 失败" },
+          "msg": { "type": "string", "description": "提示信息" },
+          "data": { "type": "object", "description": "响应数据" }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "username": { "type": "string" },
+          "email": { "type": "string" },
+          "created_at": { "type": "string", "format": "date-time" }
+        }
+      },
+      "RegisterRequest": {
+        "type": "object",
+        "required": ["username", "password", "email"],
+        "properties": {
+          "username": { "type": "string", "description": "用户名" },
+          "password": { "type": "string", "description": "密码", "minLength": 6 },
+          "email": { "type": "string", "format": "email", "description": "邮箱" }
+        }
+      },
+      "LoginRequest": {
+        "type": "object",
+        "required": ["username", "password"],
+        "properties": {
+          "username": { "type": "string", "description": "用户名或邮箱" },
+          "password": { "type": "string", "description": "密码" }
+        }
+      },
+      "AuthResponse": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "integer", "example": 200 },
+          "msg": { "type": "string", "example": "操作成功" },
+          "data": {
+            "type": "object",
+            "properties": {
+              "token": { "type": "string", "description": "JWT Token" },
+              "user": { "$ref": "#/components/schemas/User" }
+            }
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    { "name": "Auth", "description": "认证管理（登录 & 注册）" }
+  ],
+  "paths": {
+    "/user/register": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "用户注册",
+        "description": "使用用户名、密码和邮箱注册新账号",
+        "operationId": "registerUser",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterRequest"
+              },
+              "example": {
+                "username": "testuser",
+                "password": "123456",
+                "email": "testuser@example.com"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "注册成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                },
+                "example": {
+                  "code": 200,
+                  "msg": "注册成功",
+                  "data": {
+                    "token": "eyJhbGciOiJIUzI1NiIs...",
+                    "user": {
+                      "id": 1,
+                      "username": "testuser",
+                      "email": "testuser@example.com",
+                      "created_at": "2026-06-18T10:00:00Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数错误（如用户名已存在、邮箱格式不正确）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                },
+                "example": {
+                  "code": -1,
+                  "msg": "用户名已存在",
+                  "data": null
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "用户登录",
+        "description": "支持用户名或邮箱登录，返回 JWT Token",
+        "operationId": "loginUser",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              },
+              "example": {
+                "username": "testuser",
+                "password": "123456"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "登录成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                },
+                "example": {
+                  "code": 200,
+                  "msg": "登录成功",
+                  "data": {
+                    "token": "eyJhbGciOiJIUzI1NiIs...",
+                    "user": {
+                      "id": 1,
+                      "username": "testuser",
+                      "email": "testuser@example.com",
+                      "created_at": "2026-06-18T10:00:00Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "用户名或密码错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                },
+                "example": {
+                  "code": -1,
+                  "msg": "用户名或密码错误",
+                  "data": null
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

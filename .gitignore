@@ -1,0 +1,8 @@
+# Office temp files
+~$*
+
+# Dependencies
+node_modules/
+
+# Agent working files
+doct/.agents/

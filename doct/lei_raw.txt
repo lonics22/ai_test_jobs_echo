@@ -1,0 +1,68 @@
+
+ /  | 8  |  | 18930989926 | leiyh0802@126.com
+
+
+8 UI  3 
+ 4 
+ Python + Flask + Vue 3  AI+
+
+
+ UI 
+ Python Flask 3 + SQLAlchemy + MySQL + PyMySQLRESTful API SSE 
+
+ Vue 3Composition API + <script setup>+ Vite 7 + Element Plus 2 + Pinia +
+Axios + WindiCSS
+ AI OpenAI SDK + LangChain + DeepSeek / SiliconFlow
+ Selenium + WebDriver + pytest + Allure + requests + PyCharm
+ CI/CD & Jenkins + Docker + Git/Gitee + JMeter + Grafana + SonarQube + MeterSphere
+ JMeter + Grafana 
+ PythonJavaScriptCSSHTMLShell
+
+
+2023.03 -  | Gate.io  / 
+2020.05 - 2023.03 |   / 
+2018.07 - 2020.05 |  
+
+
+Gate.io -  / AI 
+ Vue 3 + Element Plus + Vite  Python Flask +
+SQLAlchemy + MySQL  AI+ OpenAI SDK +
+LangChain  AI AI  SSE
+ AI 
+  2000+
+  Python + requests + pytest + allure 
+ Jenkins  30%
+  Vue 3 + Flask  AI  AI 
+  JMeter + Grafana 
+ 1000+
+  Selenium + WebDriver  UI  100%
+  SonarQube  20%
+Clue - 
+++
+  UISelenium APIrequests CI/CD 
+  JMeter + Jenkins + Gitee 
+  MeterSphere 
+  Grafana 
+
+
+  UISelenium APIrequests
+
+  Vue 3 + Element Plus + Flask 
+  Sonar 
+ /  APP
+ C  B  APP
+  UI + API  100%
+  60%
+
+
+  UI + API  100%
+  60%
+
+
+2019.09 - 2022.06 |  |  | 
+
+
+
+
+
+

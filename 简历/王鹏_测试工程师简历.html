@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>王鹏 - 测试工程师简历</title>
+<style>
+:root { --primary: #1a73e8; --text: #333; --text-light: #666; --border: #ddd; --bg: #fff; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+  color: var(--text); background: #f5f5f5; line-height: 1.6; padding: 20px; font-size: 14px;
+}
+.page {
+  max-width: 800px; margin: 0 auto; background: var(--bg);
+  padding: 50px 60px 40px; box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+}
+
+/* Header */
+.header { text-align: center; margin-bottom: 28px; padding-bottom: 20px; border-bottom: 2px solid var(--primary); }
+.header h1 { font-size: 32px; font-weight: 700; color: var(--text); margin-bottom: 2px; letter-spacing: 2px; }
+.header .subtitle { font-size: 15px; color: var(--primary); font-weight: 500; margin-bottom: 10px; }
+.header .contact-info { font-size: 12.5px; color: var(--text-light); display: flex; justify-content: center; flex-wrap: wrap; gap: 6px 18px; }
+.header .contact-info span { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+.header .contact-info .icon { width: 14px; height: 14px; vertical-align: middle; }
+
+/* Section */
+h2 { font-size: 16px; font-weight: 700; color: var(--primary); border-bottom: 1px solid var(--border); padding-bottom: 6px; margin: 22px 0 12px; }
+h2::before { content: ""; display: inline-block; width: 3px; height: 16px; background: var(--primary); margin-right: 8px; vertical-align: middle; border-radius: 2px; }
+
+p { margin: 4px 0; font-size: 13px; }
+ul { padding-left: 18px; margin: 4px 0; }
+li { font-size: 13px; margin-bottom: 3px; line-height: 1.5; }
+strong { color: var(--text); font-weight: 600; }
+
+/* Entry */
+.entry-header { display: flex; justify-content: space-between; align-items: baseline; margin-top: 12px; }
+.entry-header .title { font-size: 14px; font-weight: 700; color: var(--text); }
+.entry-header .title .role { font-weight: 400; color: var(--text-light); font-size: 13px; }
+.entry-header .date { font-size: 12px; color: var(--text-light); white-space: nowrap; }
+.entry-sub { font-size: 12px; color: var(--text-light); margin-bottom: 4px; }
+
+/* Tag */
+.tag-list { display: flex; flex-wrap: wrap; gap: 5px; margin: 6px 0 4px; }
+.tag { display: inline-block; background: #e8f0fe; color: var(--primary); font-size: 11px; padding: 1px 8px; border-radius: 3px; font-weight: 500; }
+
+/* Skill */
+.skill-line { margin: 4px 0; font-size: 13px; }
+.skill-line .label { font-weight: 600; display: inline-block; min-width: 70px; color: var(--text); }
+
+@media print {
+  body { background: var(--bg); padding: 0; }
+  .page { box-shadow: none; padding: 40px 50px 30px; }
+  .tag { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <h1>王 鹏</h1>
+    <div class="subtitle">资深测试工程师 · 8 年经验</div>
+    <div class="contact-info">
+      <span>
+        <svg class="icon" viewBox="0 0 512 512" fill="currentColor"><path d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"/></svg>
+        18017087850
+      </span>
+      <span>
+        <svg class="icon" viewBox="0 0 384 512" fill="currentColor"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></svg>
+        上海
+      </span>
+      <span>
+        <svg class="icon" viewBox="0 0 512 512" fill="currentColor"><path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48H48zM0 176V384c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V176L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"/></svg>
+        wangpeng@email.com
+      </span>
+      <span>🎂 26 岁 · 本科 · 软件工程</span>
+    </div>
+  </div>
+
+  <!-- 个人优势 -->
+  <h2>个人优势</h2>
+  <p style="font-size:13px; line-height:1.6; margin-bottom:10px;">
+    8 年测试经验的高级工程师，覆盖金融级 C 端 APP、ERP 系统和数据平台的全生命周期质量保障。曾担任测试组长，具备测试计划制定、任务分配、跨团队协调及质量红线管理能力。技术栈涵盖功能、接口、性能、自动化测试及大数据验证，擅长从零搭建自动化框架并集成 CI/CD 流程。熟练运用 AI 工具辅助生成测试场景与脚本，提升测试资产构建效率。
+  </p>
+
+  <!-- 工作经历 -->
+  <h2>工作经历</h2>
+
+  <div class="entry-header">
+    <span class="title">西域供应链（上海）有限公司 <span class="role">· 软件测试</span></span>
+    <span class="date">2021.07 — 2026.10</span>
+  </div>
+
+  <div class="entry-header" style="margin-top:8px;">
+    <span class="title" style="font-size:13px;">Raxwell-Odoo / Odoos ERP 系统</span>
+    <span class="date">2022.06 — 2025.10</span>
+  </div>
+  <div class="entry-sub">开源 ERP 二次开发 · 角色：软件测试工程师</div>
+  <ul>
+    <li>主导 Raxwell-Odoo ERP 系统全链路质量保障，覆盖采购、库存、销售、财务等核心模块，担任项目测试负责人，统筹迭代任务与跨系统对接测试。</li>
+    <li>从零搭建 pytest + requests + allure 接口自动化框架，覆盖主要业务接口并集成 Jenkins 定时执行，提升回归测试效率。</li>
+    <li>参加业务需求评审，从实际业务角度提出流程优化建议，降低后期返工成本。</li>
+    <li>通过 DevOps 及 MeterSphere 管理测试流程与缺陷跟踪，保障多条业务线并行迭代的质量交付。</li>
+  </ul>
+
+  <div class="entry-header">
+    <span class="title" style="font-size:13px;">财务侧大数据平台</span>
+    <span class="date">2024.03 — 2025.04</span>
+  </div>
+  <div class="entry-sub">多源财务系统数据链路 · 角色：测试工程师</div>
+  <ul>
+    <li>打通 Raxwell-Odoo / Odoos 与集团用友平台的数据链路，保障 T+1 定时抽取、清洗、加工全链路稳定运行。</li>
+    <li>设计并实施数据完整性校验方案：总行数比对、主键唯一性校验、空值及异常值检测，确保海量财务数据传输零丢失、零重复。</li>
+    <li>精通 Odoo、用友等 ERP 系统的凭证对接、总账、应收应付及报表核算逻辑。</li>
+  </ul>
+
+  <div class="entry-header">
+    <span class="title" style="font-size:13px;">官网搜索引擎优化（SEO）与电商算法推荐专项</span>
+    <span class="date">2021.12 — 2022.10</span>
+  </div>
+  <div class="entry-sub">搜索系统算法升级 · 角色：测试工程师</div>
+  <ul>
+    <li>主导搜索全链路策略测试，覆盖分词、核心词匹配、向量相似度计算、多级召回、去重合并全流程验证。</li>
+    <li>构建 500+ 条覆盖核心词、长尾词、错别字及同义词的测试集，通过人工推导与脚本边界值双重验证保障召回率与准确率。</li>
+    <li>从零搭建 pytest + requests + allure 接口自动化框架，完成搜索功能接口自动化并集成 Jenkins 定时报告。</li>
+    <li>组织举办搜索项目逻辑与测试方法的团队分享会。</li>
+  </ul>
+
+  <div class="entry-header">
+    <span class="title">纬创软件（武汉）有限公司 <span class="role">· 测试工程师</span></span>
+    <span class="date">2018.07 — 2021.05</span>
+  </div>
+
+  <div class="entry-header" style="margin-top:8px;">
+    <span class="title" style="font-size:13px;">易金通 — 上海黄金交易所官方移动终端</span>
+    <span class="date">2018.07 — 2021.05</span>
+  </div>
+  <div class="entry-sub">金融级 C 端 APP · 角色：测试组长</div>
+  <ul>
+    <li>担任测试组长，统筹 iOS / 安卓端行情、交易、开户等全功能模块测试及后台管理系统验证。</li>
+    <li>协调会员单位联调环境，查询日志分析报文，协助数据库数据修复。</li>
+    <li>独立完成测试环境部署，使用 SecurityCRT、Xshell 定位后台日志问题，协助开发高效修复缺陷。</li>
+    <li>负责与甲方验收沟通，支持迭代验收、模拟测试与上线保障，确保版本按期交付。</li>
+    <li>优化项目部署流程，利用 Jenkins + Shell 实现自动化部署；使用 JMeter + top 命令完成性能测试方案并输出报告。</li>
+    <li>按版本召开安全评估会议，统计质量报表，对超出质量红线的部分召开质量分析会并跟踪改进结果。</li>
+  </ul>
+
+  <!-- 项目经历（用标签归类） -->
+  <h2>项目技术栈</h2>
+  <div class="tag-list" style="margin-bottom:8px;">
+    <span class="tag">Odoo</span>
+    <span class="tag">PostgreSQL</span>
+    <span class="tag">Hive SQL</span>
+    <span class="tag">Kafka</span>
+    <span class="tag">MySQL</span>
+    <span class="tag">Oracle</span>
+    <span class="tag">Python</span>
+    <span class="tag">pytest</span>
+    <span class="tag">requests</span>
+    <span class="tag">allure</span>
+    <span class="tag">Selenium</span>
+    <span class="tag">JMeter</span>
+    <span class="tag">Postman</span>
+    <span class="tag">Jenkins</span>
+    <span class="tag">Shell</span>
+    <span class="tag">Linux</span>
+    <span class="tag">DevOps</span>
+    <span class="tag">MeterSphere</span>
+    <span class="tag">用友 ERP</span>
+    <span class="tag">SecurityCRT</span>
+    <span class="tag">Xshell</span>
+  </div>
+
+  <!-- 教育经历 -->
+  <h2>教育经历</h2>
+  <div class="entry-header">
+    <span class="title">电子科技大学 · 软件工程 · 本科</span>
+    <span class="date">2019 — 2021</span>
+  </div>
+
+  <!-- 技能清单 -->
+  <h2>技能清单</h2>
+  <div class="skill-line"><span class="label">测试领域</span>功能测试 · 接口测试 · 性能测试 · 自动化测试 · 安全测试 · 数据完整性测试 · 算法测试</div>
+  <div class="skill-line"><span class="label">编程语言</span>Python · SQL · Shell</div>
+  <div class="skill-line"><span class="label">数据库</span>MySQL · Oracle · PostgreSQL · Hive</div>
+  <div class="skill-line"><span class="label">测试工具</span>JMeter · Postman · pytest · Selenium · Allure · Jenkins</div>
+  <div class="skill-line"><span class="label">测试管理</span>DevOps · MeterSphere · Jira</div>
+  <div class="skill-line"><span class="label">服务器</span>Linux · SecurityCRT · Xshell · Shell 脚本</div>
+  <div class="skill-line"><span class="label">AI 能力</span>LLM 提示词工程 · AI Agent · AI 辅助测试脚本生成</div>
+
+</div>
+</body>
+</html>

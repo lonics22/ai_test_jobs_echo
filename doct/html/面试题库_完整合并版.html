@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>面试题库 · 完整合并版</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; background: #f5f7fa; color: #333; }
+  .header { background: linear-gradient(135deg, #1a73e8, #0d47a1); color: #fff; padding: 40px 20px; text-align: center; }
+  .header h1 { font-size: 28px; margin-bottom: 8px; }
+  .header p { font-size: 14px; opacity: .85; }
+  .container { max-width: 920px; margin: 0 auto; padding: 20px 16px 80px; }
+  .nav-cats { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px; }
+  .nav-cats a { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 13px; background: #e8f0fe; color: #1a73e8; text-decoration: none; transition: .2s; }
+  .nav-cats a:hover { background: #1a73e8; color: #fff; }
+  section { margin-bottom: 40px; padding: 20px 16px; border-radius: 14px; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.06); border-left: 4px solid #1a73e8; }
+  section#cat-2 { border-left-color: #e65100; }
+  section#cat-3 { border-left-color: #2e7d32; }
+  section#cat-4 { border-left-color: #7b1fa2; }
+  section h2 { font-size: 20px; color: #1a73e8; padding-left: 12px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; cursor: pointer; user-select: none; }
+  section h2 .collapse-icon { font-size: 14px; transition: transform .2s; color: inherit; opacity: .5; }
+  section.collapsed h2 { margin-bottom: 0; }
+  section.collapsed .cat-body { display: none; }
+  section#cat-2 h2 { color: #e65100; }
+  section#cat-3 h2 { color: #2e7d32; }
+  section#cat-4 h2 { color: #7b1fa2; }
+  section h2 .badge { font-size: 12px; background: #e8f0fe; color: #1a73e8; padding: 1px 10px; border-radius: 12px; font-weight: 400; }
+  section#cat-2 .badge { background: #fff3e0; color: #e65100; }
+  section#cat-3 .badge { background: #e8f5e9; color: #2e7d32; }
+  section#cat-4 .badge { background: #f3e5f5; color: #7b1fa2; }
+  details { background: #fff; border-radius: 10px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,.08); overflow: hidden; transition: .2s; }
+  details:hover { box-shadow: 0 2px 8px rgba(0,0,0,.12); }
+  details[open] { box-shadow: 0 2px 12px rgba(0,0,0,.1); }
+  summary { padding: 14px 16px; cursor: pointer; font-size: 15px; font-weight: 500; list-style: none; display: flex; align-items: flex-start; gap: 10px; user-select: none; }
+  summary::-webkit-details-marker { display: none; }
+  summary .q-num { display: inline-flex; align-items: center; justify-content: center; min-width: 28px; height: 28px; border-radius: 50%; background: #e8f0fe; color: #1a73e8; font-size: 13px; font-weight: 600; flex-shrink: 0; }
+  summary .tag { font-size: 11px; padding: 1px 8px; border-radius: 10px; margin-left: auto; flex-shrink: 0; background: #e8f0fe; color: #1a73e8; }
+  .q-body { padding: 0 16px 16px 52px; font-size: 14px; line-height: 1.7; color: #444; }
+  .q-body p { margin: 6px 0; }
+  .q-body pre { background: #f5f5f5; padding: 12px; border-radius: 6px; overflow-x: auto; font-size: 13px; line-height: 1.5; margin: 8px 0; }
+  footer { text-align: center; padding: 20px; font-size: 13px; color: #999; }
+  .toolbar { display: flex; gap: 10px; align-items: center; margin-bottom: 24px; flex-wrap: wrap; }
+  .search-wrapper { position: relative; flex: 1; min-width: 200px; }
+  #search-input { width: 100%; padding: 10px 36px 10px 14px; border: 2px solid #e0e0e0; border-radius: 24px; font-size: 14px; outline: none; transition: border-color .2s; background: #fff; }
+  #search-input:focus { border-color: #1a73e8; }
+  .search-clear { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 22px; color: #999; display: none; line-height: 1; }
+  .search-clear.visible { display: block; }
+  .search-clear:hover { color: #666; }
+  .btn-toggle { padding: 8px 20px; border: none; border-radius: 20px; font-size: 13px; cursor: pointer; background: #1a73e8; color: #fff; transition: .2s; white-space: nowrap; font-weight: 500; }
+  .btn-toggle:hover { background: #0d47a1; }
+  .loading { text-align: center; padding: 60px 20px; color: #999; font-size: 15px; }
+  .no-results { text-align: center; padding: 60px 20px; color: #999; font-size: 15px; }
+  .load-error { text-align: center; padding: 40px 20px; color: #d32f2f; font-size: 15px; }
+  @media (max-width: 640px) { .header h1 { font-size: 22px; } summary { font-size: 14px; } .q-body { padding: 0 12px 12px 16px; } }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>📋 面试题库 · 押题版</h1>
+  <p>王鹏 · 按押题精简 · 标准答案格式统一</p>
+</div>
+
+<div class="container">
+  <div class="nav-cats">
+    <a href="#cat-1">🤖 AI押题</a>
+    <a href="#cat-2">🏢 业务测试</a>
+    <a href="#cat-3">📊 测试管理</a>
+    <a href="#cat-4">💰 余币宝</a>
+  </div>
+
+    <div class="toolbar">
+      <div class="search-wrapper">
+        <input type="text" id="search-input" placeholder="搜索题目名称或内容..." />
+        <span class="search-clear" id="search-clear">&times;</span>
+      </div>
+      <button id="toggle-all" class="btn-toggle">展开全部</button>
+    </div>
+
+    <div id="sections-container">
+      <div class="loading">加载中...</div>
+    </div>
+
+  <footer>
+    王鹏 · 面试押题版 &mdash; 共 <span id="question-count">0</span> 题 &mdash; 标准答案格式统一 &mdash; 2026.07
+  </footer>
+
+</div>
+<script>
+(function() {
+  'use strict';
+
+  var allData = [];
+  var searchQuery = '';
+
+  var container = document.getElementById('sections-container');
+  var searchInput = document.getElementById('search-input');
+  var searchClear = document.getElementById('search-clear');
+  var toggleBtn = document.getElementById('toggle-all');
+  var footerCount = document.getElementById('question-count');
+
+  // Fetch & init
+  fetch('./data.json')
+    .then(function(res) {
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.json();
+    })
+    .then(function(data) {
+      allData = data;
+      renderAll(data);
+      updateFooterCount(data);
+      bindEvents();
+    })
+    .catch(function(err) {
+      container.innerHTML = '<div class="load-error">加载题库数据失败: ' + escapeHtml(err.message) + '。<br>请通过 HTTP 服务器访问此页面（不支持 file:// 协议）。</div>';
+    });
+
+  // Render
+  function renderAll(data) {
+    if (!data || data.length === 0) {
+      container.innerHTML = '<div class="no-results">暂无题库数据</div>';
+      return;
+    }
+    var html = '';
+    for (var c = 0; c < data.length; c++) {
+      html += renderCategory(data[c]);
+    }
+    container.innerHTML = html;
+  }
+
+  function renderCategory(cat) {
+    var html = '<section id="' + cat.id + '">';
+    html += '<h2><span class="collapse-icon">▼</span> ' + cat.icon + ' ' + escapeHtml(cat.title) + ' <span class="badge">' + escapeHtml(cat.badge) + '</span></h2>';
+    html += '<div class="cat-body">';
+    for (var q = 0; q < cat.questions.length; q++) {
+      html += renderQuestion(cat.questions[q]);
+    }
+    html += '</div></section>';
+    return html;
+  }
+
+  function renderQuestion(q) {
+    return '<details>' +
+      '<summary><span class="q-num">' + q.num + '</span>' + escapeHtml(q.title) + '</summary>' +
+      '<div class="q-body">' + q.answer + '</div>' +
+    '</details>';
+  }
+
+  // Search
+  function bindEvents() {
+    // Category collapse/expand
+    container.addEventListener('click', function(e) {
+      var h2 = e.target.closest('section h2');
+      if (!h2) return;
+      var section = h2.closest('section');
+      if (!section) return;
+      section.classList.toggle('collapsed');
+      var icon = h2.querySelector('.collapse-icon');
+      if (icon) icon.textContent = section.classList.contains('collapsed') ? '▶' : '▼';
+    });
+    var debounceTimer = null;
+    searchInput.addEventListener('input', function() {
+      var val = this.value;
+      searchClear.classList.toggle('visible', val.length > 0);
+      if (debounceTimer) clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(function() {
+        searchQuery = val.trim().toLowerCase();
+        filterQuestions(searchQuery);
+      }, 200);
+    });
+
+    searchClear.addEventListener('click', function() {
+      searchInput.value = '';
+      searchClear.classList.remove('visible');
+      searchQuery = '';
+      filterQuestions('');
+      searchInput.focus();
+    });
+
+    toggleBtn.addEventListener('click', function() {
+      var allDetails = container.querySelectorAll('details');
+      var visibleDetails = [];
+      for (var i = 0; i < allDetails.length; i++) {
+        if (allDetails[i].style.display !== 'none') {
+          visibleDetails.push(allDetails[i]);
+        }
+      }
+      if (visibleDetails.length === 0) return;
+      var anyCollapsed = visibleDetails.some(function(d) { return !d.open; });
+      for (var j = 0; j < visibleDetails.length; j++) {
+        visibleDetails[j].open = anyCollapsed;
+      }
+      toggleBtn.textContent = anyCollapsed ? '收起全部' : '展开全部';
+      // Also expand all categories when expanding questions
+      if (anyCollapsed) {
+        var allSections = container.querySelectorAll('section.collapsed');
+        for (var k = 0; k < allSections.length; k++) {
+          allSections[k].classList.remove('collapsed');
+          var icon = allSections[k].querySelector('h2 .collapse-icon');
+          if (icon) icon.textContent = '▼';
+        }
+      }
+    });
+  }
+
+  function filterQuestions(query) {
+    var sections = container.querySelectorAll('section[id^="cat-"]');
+    var totalVisible = 0;
+
+    for (var c = 0; c < sections.length; c++) {
+      var cat = allData[c];
+      if (!cat) continue;
+      var details = sections[c].querySelectorAll('details');
+      var catHasVisible = false;
+
+      for (var q = 0; q < details.length; q++) {
+        var question = cat.questions[q];
+        if (!question) {
+          details[q].style.display = 'none';
+          continue;
+        }
+        var match = !query ||
+          question.title.toLowerCase().indexOf(query) !== -1 ||
+          question.answer.toLowerCase().indexOf(query) !== -1;
+        details[q].style.display = match ? '' : 'none';
+        if (match) { catHasVisible = true; totalVisible++; }
+      }
+      sections[c].style.display = catHasVisible ? '' : 'none';
+      // Auto-expand category if search matches and it was collapsed
+      if (query && catHasVisible && sections[c].classList.contains('collapsed')) {
+        sections[c].classList.remove('collapsed');
+        var icon = sections[c].querySelector('h2 .collapse-icon');
+        if (icon) icon.textContent = '▼';
+      }
+    }
+
+    // Show/hide "no results"
+    var existingNoResults = container.querySelector('.no-results');
+    if (totalVisible === 0 && allData.length > 0) {
+      if (!existingNoResults) {
+        var el = document.createElement('div');
+        el.className = 'no-results';
+        el.textContent = '没有找到匹配的题目';
+        container.appendChild(el);
+      }
+    } else {
+      if (existingNoResults) existingNoResults.remove();
+    }
+    // Reset toggle button text
+    toggleBtn.textContent = '展开全部';
+  }
+
+  function updateFooterCount(data) {
+    var total = 0;
+    for (var c = 0; c < data.length; c++) {
+      total += data[c].questions.length;
+    }
+    if (footerCount) footerCount.textContent = total;
+  }
+
+  function escapeHtml(str) {
+    var div = document.createElement('div');
+    div.appendChild(document.createTextNode(str));
+    return div.innerHTML;
+  }
+})();
+</script>
+</body>
+</html>

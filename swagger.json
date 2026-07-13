@@ -1,0 +1,1828 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "AI 测试效能平台 API",
+    "description": "AI Test DevOps Platform — 智能测试用例生成、需求评审、接口自动化测试",
+    "version": "1.0.0",
+    "contact": {
+      "email": "admin@example.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:5000",
+      "description": "本地开发服务器"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "登录后获取 token，格式: Authorization: Bearer <token>"
+      }
+    },
+    "schemas": {
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "integer", "description": "状态码，200 成功，-1 失败" },
+          "msg": { "type": "string", "description": "提示信息" },
+          "data": { "type": "object", "description": "响应数据" },
+          "total": { "type": "integer", "description": "总记录数（分页时返回）" },
+          "page": { "type": "integer", "description": "当前页码" },
+          "pageSize": { "type": "integer", "description": "每页条数" }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "username": { "type": "string" },
+          "email": { "type": "string" },
+          "created_at": { "type": "string", "format": "date-time" }
+        }
+      },
+      "Project": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "user_id": { "type": "integer" },
+          "llm_url": { "type": "string" },
+          "llm_key": { "type": "string" },
+          "llm_model": { "type": "string" },
+          "lvm_url": { "type": "string" },
+          "lvm_key": { "type": "string" },
+          "lvm_model": { "type": "string" },
+          "base_url": { "type": "string" },
+          "created_at": { "type": "string", "format": "date-time" },
+          "updated_at": { "type": "string", "format": "date-time" }
+        }
+      },
+      "Document": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "project_id": { "type": "integer" },
+          "title": { "type": "string" },
+          "content": { "type": "string" },
+          "parent_id": { "type": "integer", "nullable": true },
+          "sort": { "type": "integer" },
+          "created_at": { "type": "string", "format": "date-time" },
+          "updated_at": { "type": "string", "format": "date-time" }
+        }
+      },
+      "TestCase": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "project_id": { "type": "integer" },
+          "module_id": { "type": "integer" },
+          "name": { "type": "string" },
+          "priority": { "type": "string", "enum": ["P0", "P1", "P2", "P3", "P4"] },
+          "precondition": { "type": "string" },
+          "steps": { "type": "string" },
+          "expected": { "type": "string" },
+          "actual_result": { "type": "string" },
+          "status": { "type": "string", "enum": ["unreviewed", "approved", "rejected", "production", "generating", "completed", "failed"] },
+          "generation_id": { "type": "integer", "nullable": true },
+          "remark": { "type": "string" },
+          "created_at": { "type": "string", "format": "date-time" },
+          "updated_at": { "type": "string", "format": "date-time" }
+        }
+      },
+      "ApiDocument": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "project_id": { "type": "integer" },
+          "title": { "type": "string" },
+          "source": { "type": "string", "enum": ["swagger", "manual"] },
+          "content": { "type": "string", "description": "Swagger JSON 或 Markdown 内容" },
+          "created_at": { "type": "string", "format": "date-time" },
+          "updated_at": { "type": "string", "format": "date-time" }
+        }
+      },
+      "ApiTestCase": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "project_id": { "type": "integer" },
+          "module_id": { "type": "integer" },
+          "name": { "type": "string" },
+          "priority": { "type": "string", "enum": ["P0", "P1", "P2", "P3", "P4"] },
+          "precondition": { "type": "string" },
+          "api_path": { "type": "string" },
+          "api_method": { "type": "string" },
+          "api_type": { "type": "string", "default": "REST" },
+          "request_params": { "type": "string", "description": "JSON 字符串" },
+          "request_body": { "type": "string", "description": "JSON 字符串" },
+          "request_headers": { "type": "string", "description": "JSON 字符串" },
+          "assertions": { "type": "string", "description": "JSON 数组字符串" },
+          "expected": { "type": "string" },
+          "tags": { "type": "string" },
+          "category": { "type": "string" },
+          "status": { "type": "string", "enum": ["draft", "ready", "passed", "failed"] },
+          "created_at": { "type": "string", "format": "date-time" },
+          "updated_at": { "type": "string", "format": "date-time" }
+        }
+      },
+      "Prompt": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "project_id": { "type": "integer", "nullable": true },
+          "module": { "type": "string", "enum": ["requirement_review", "ui_test_case", "api_test_case", "api_assertion", "image_analysis"] },
+          "content": { "type": "string" },
+          "is_default": { "type": "boolean" },
+          "created_at": { "type": "string", "format": "date-time" },
+          "updated_at": { "type": "string", "format": "date-time" }
+        }
+      },
+      "KnowledgeFile": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "project_id": { "type": "integer" },
+          "filename": { "type": "string" },
+          "file_type": { "type": "string" },
+          "file_size": { "type": "integer" },
+          "chunk_count": { "type": "integer" },
+          "status": { "type": "string", "enum": ["parsing", "completed", "failed"] },
+          "error_msg": { "type": "string" },
+          "created_at": { "type": "string", "format": "date-time" }
+        }
+      },
+      "KnowledgeChunk": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "file_id": { "type": "integer" },
+          "chunk_index": { "type": "integer" },
+          "content": { "type": "string" },
+          "chroma_id": { "type": "string" },
+          "created_at": { "type": "string", "format": "date-time" }
+        }
+      },
+      "ApiExecutionRecord": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "execution_id": { "type": "string" },
+          "project_id": { "type": "integer" },
+          "api_test_case_id": { "type": "integer" },
+          "case_name": { "type": "string" },
+          "status": { "type": "string", "enum": ["pending", "running", "passed", "failed", "error"] },
+          "http_status_code": { "type": "integer" },
+          "response_time_ms": { "type": "integer" },
+          "request_url": { "type": "string" },
+          "request_method": { "type": "string" },
+          "request_headers": { "type": "string" },
+          "request_body": { "type": "string" },
+          "response_headers": { "type": "string" },
+          "response_body": { "type": "string" },
+          "assertions_result": { "type": "string" },
+          "error_message": { "type": "string" },
+          "created_at": { "type": "string", "format": "date-time" }
+        }
+      },
+      "SSEEvent": {
+        "type": "object",
+        "description": "Server-Sent Events 流式响应格式",
+        "properties": {
+          "status": { "type": "string", "enum": ["start", "streaming", "completed", "error"] },
+          "content": { "type": "string" },
+          "full_content": { "type": "string" },
+          "data": { "type": "object" },
+          "warning": { "type": "string" }
+        }
+      }
+    }
+  },
+  "tags": [
+    { "name": "User", "description": "用户管理" },
+    { "name": "Project", "description": "项目管理" },
+    { "name": "Document", "description": "需求文档管理" },
+    { "name": "TestCase", "description": "UI 测试用例管理" },
+    { "name": "ApiDocument", "description": "接口文档管理" },
+    { "name": "ApiTestCase", "description": "接口测试用例管理" },
+    { "name": "Knowledge", "description": "知识库管理" },
+    { "name": "Prompt", "description": "提示词管理" },
+    { "name": "System", "description": "系统管理" }
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "tags": ["System"],
+        "summary": "API 根路径",
+        "description": "列出所有已注册的路由",
+        "responses": {
+          "200": {
+            "description": "返回所有已注册路由列表"
+          }
+        }
+      }
+    },
+    "/docs": {
+      "get": {
+        "tags": ["System"],
+        "summary": "内置 API 文档页面",
+        "description": "自包含的 HTML/JS 浏览器端 API 文档页",
+        "responses": {
+          "200": {
+            "description": "HTML 文档页面"
+          }
+        }
+      }
+    },
+    "/user/register": {
+      "post": {
+        "tags": ["User"],
+        "summary": "用户注册",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["username", "password", "email"],
+                "properties": {
+                  "username": { "type": "string", "description": "用户名" },
+                  "password": { "type": "string", "description": "密码" },
+                  "email": { "type": "string", "format": "email", "description": "邮箱" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "注册成功，返回 token 和用户信息",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": { "type": "integer", "example": 200 },
+                    "msg": { "type": "string", "example": "注册成功" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "token": { "type": "string" },
+                        "user": { "$ref": "#/components/schemas/User" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/login": {
+      "post": {
+        "tags": ["User"],
+        "summary": "用户登录",
+        "description": "支持用户名或邮箱登录",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["username", "password"],
+                "properties": {
+                  "username": { "type": "string", "description": "用户名或邮箱" },
+                  "password": { "type": "string", "description": "密码" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "登录成功，返回 token 和用户信息",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": { "type": "integer", "example": 200 },
+                    "msg": { "type": "string", "example": "登录成功" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "token": { "type": "string" },
+                        "user": { "$ref": "#/components/schemas/User" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/profile": {
+      "get": {
+        "tags": ["User"],
+        "summary": "获取当前用户信息",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "用户信息",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": { "type": "integer", "example": 200 },
+                    "data": { "$ref": "#/components/schemas/User" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["User"],
+        "summary": "更新个人信息",
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string", "format": "email" },
+                  "password": { "type": "string", "description": "新密码" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "更新成功" }
+        }
+      }
+    },
+    "/project/query": {
+      "get": {
+        "tags": ["Project"],
+        "summary": "查询项目",
+        "description": "支持 id 精确查询、name 模糊查询、查询全部",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "query", "schema": { "type": "integer" }, "description": "项目 ID（精确查询）" },
+          { "name": "name", "in": "query", "schema": { "type": "string" }, "description": "项目名称（模糊查询）" }
+        ],
+        "responses": {
+          "200": { "description": "查询成功" }
+        }
+      }
+    },
+    "/project/add": {
+      "post": {
+        "tags": ["Project"],
+        "summary": "新增项目",
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name"],
+                "properties": {
+                  "name": { "type": "string", "description": "项目名称" },
+                  "description": { "type": "string" },
+                  "llm_url": { "type": "string" },
+                  "llm_key": { "type": "string" },
+                  "llm_model": { "type": "string" },
+                  "lvm_url": { "type": "string" },
+                  "lvm_key": { "type": "string" },
+                  "lvm_model": { "type": "string" },
+                  "base_url": { "type": "string", "description": "被测服务地址" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "项目创建成功" }
+        }
+      }
+    },
+    "/project/update": {
+      "put": {
+        "tags": ["Project"],
+        "summary": "更新项目",
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["id"],
+                "properties": {
+                  "id": { "type": "integer" },
+                  "name": { "type": "string" },
+                  "description": { "type": "string" },
+                  "llm_url": { "type": "string" },
+                  "llm_key": { "type": "string" },
+                  "llm_model": { "type": "string" },
+                  "lvm_url": { "type": "string" },
+                  "lvm_key": { "type": "string" },
+                  "lvm_model": { "type": "string" },
+                  "base_url": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "项目更新成功" }
+        }
+      }
+    },
+    "/project/delete": {
+      "delete": {
+        "tags": ["Project"],
+        "summary": "删除项目",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "query", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "项目删除成功" }
+        }
+      }
+    },
+    "/project/list_by_user": {
+      "get": {
+        "tags": ["Project"],
+        "summary": "获取当前用户的项目列表",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": { "description": "项目列表" }
+        }
+      }
+    },
+    "/project/stats": {
+      "get": {
+        "tags": ["Project"],
+        "summary": "项目统计信息",
+        "description": "返回文档数、UI 测试用例数、接口测试用例数",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "query", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "统计信息" }
+        }
+      }
+    },
+    "/project/sync_from_devops": {
+      "post": {
+        "tags": ["Project"],
+        "summary": "从 DevOps 同步项目",
+        "description": "占位接口，目前仅创建同名项目",
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string", "default": "synced-project" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "同步成功" }
+        }
+      }
+    },
+    "/document/query_all": {
+      "get": {
+        "tags": ["Document"],
+        "summary": "查询项目下所有文档",
+        "description": "支持按 project_id 过滤，也支持查询全部",
+        "parameters": [
+          { "name": "project_id", "in": "query", "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "文档列表" }
+        }
+      }
+    },
+    "/document/query_by_id": {
+      "get": {
+        "tags": ["Document"],
+        "summary": "查询文档详情",
+        "parameters": [
+          { "name": "id", "in": "query", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "文档详情" }
+        }
+      }
+    },
+    "/document/insert": {
+      "post": {
+        "tags": ["Document"],
+        "summary": "创建文档",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["title"],
+                "properties": {
+                  "project_id": { "type": "integer" },
+                  "title": { "type": "string" },
+                  "content": { "type": "string" },
+                  "parent_id": { "type": "integer", "nullable": true },
+                  "sort": { "type": "integer", "default": 0 }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "文档创建成功" }
+        }
+      }
+    },
+    "/document/update": {
+      "put": {
+        "tags": ["Document"],
+        "summary": "更新文档",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["id"],
+                "properties": {
+                  "id": { "type": "integer" },
+                  "title": { "type": "string" },
+                  "content": { "type": "string" },
+                  "parent_id": { "type": "integer", "nullable": true },
+                  "sort": { "type": "integer" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "文档更新成功" }
+        }
+      }
+    },
+    "/document/delete": {
+      "delete": {
+        "tags": ["Document"],
+        "summary": "删除文档",
+        "parameters": [
+          { "name": "id", "in": "query", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "文档删除成功" }
+        }
+      }
+    },
+    "/document/import_document": {
+      "post": {
+        "tags": ["Document"],
+        "summary": "导入文件",
+        "description": "支持 md / txt / docx / doc / pdf 格式",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": ["file"],
+                "properties": {
+                  "file": { "type": "string", "format": "binary", "description": "上传的文件" },
+                  "project_id": { "type": "integer" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "文档导入成功" }
+        }
+      }
+    },
+    "/document/process_with_ai_stream": {
+      "post": {
+        "tags": ["Document"],
+        "summary": "AI 流式评审需求文档",
+        "description": "返回 SSE (Server-Sent Events) 流",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["project_id", "primary_content"],
+                "properties": {
+                  "project_id": { "type": "integer" },
+                  "primary_content": { "type": "integer", "description": "主需求文档 ID" },
+                  "second_content": { "type": "string", "description": "关联文档 ID，逗号分隔" },
+                  "hint": { "type": "string", "description": "评审提示" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "SSE 流式响应",
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "$ref": "#/components/schemas/SSEEvent"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/document/prompt": {
+      "get": {
+        "tags": ["Document"],
+        "summary": "获取需求评审提示词",
+        "parameters": [
+          { "name": "project_id", "in": "query", "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "提示词内容" }
+        }
+      },
+      "put": {
+        "tags": ["Document"],
+        "summary": "保存需求评审提示词",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["content"],
+                "properties": {
+                  "project_id": { "type": "integer", "nullable": true },
+                  "content": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "保存成功" }
+        }
+      }
+    },
+    "/test_case/query_by_page": {
+      "post": {
+        "tags": ["TestCase"],
+        "summary": "分页查询 UI 测试用例",
+        "description": "支持按 project_id / status / generation_id 筛选，默认排除 batch header",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "page": { "type": "integer", "default": 1 },
+                  "pageSize": { "type": "integer", "default": 10 },
+                  "project_id": { "type": "integer" },
+                  "status": { "type": "string" },
+                  "generation_id": { "type": "integer" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "分页数据" }
+        }
+      }
+    },
+    "/test_case/query_by_id": {
+      "get": {
+        "tags": ["TestCase"],
+        "summary": "查询 UI 测试用例详情",
+        "parameters": [
+          { "name": "id", "in": "query", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "用例详情" }
+        }
+      }
+    },
+    "/test_case/insert": {
+      "post": {
+        "tags": ["TestCase"],
+        "summary": "创建 UI 测试用例",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name"],
+                "properties": {
+                  "project_id": { "type": "integer" },
+                  "module_id": { "type": "integer", "default": 0 },
+                  "name": { "type": "string" },
+                  "priority": { "type": "string", "enum": ["P0", "P1", "P2", "P3", "P4"], "default": "P2" },
+                  "precondition": { "type": "string" },
+                  "steps": { "type": "string" },
+                  "expected": { "type": "string" },
+                  "actual_result": { "type": "string" },
+                  "status": { "type": "string", "default": "unreviewed" },
+                  "generation_id": { "type": "integer" },
+                  "remark": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "用例创建成功" }
+        }
+      }
+    },
+    "/test_case/insert_batch": {
+      "post": {
+        "tags": ["TestCase"],
+        "summary": "批量创建 UI 测试用例",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["cases"],
+                "properties": {
+                  "project_id": { "type": "integer" },
+                  "cases": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": { "type": "string" },
+                        "priority": { "type": "string" },
+                        "precondition": { "type": "string" },
+                        "steps": { "type": "string" },
+                        "expected": { "type": "string" },
+                        "status": { "type": "string" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "批量创建成功" }
+        }
+      }
+    },
+    "/test_case/update": {
+      "put": {
+        "tags": ["TestCase"],
+        "summary": "更新 UI 测试用例",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["id"],
+                "properties": {
+                  "id": { "type": "integer" },
+                  "name": { "type": "string" },
+                  "priority": { "type": "string" },
+                  "precondition": { "type": "string" },
+                  "steps": { "type": "string" },
+                  "expected": { "type": "string" },
+                  "actual_result": { "type": "string" },
+                  "status": { "type": "string" },
+                  "remark": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "用例更新成功" }
+        }
+      }
+    },
+    "/test_case/delete": {
+      "delete": {
+        "tags": ["TestCase"],
+        "summary": "删除 UI 测试用例",
+        "parameters": [
+          { "name": "id", "in": "query", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "删除成功" }
+        }
+      }
+    },
+    "/test_case/process_with_ai_stream": {
+      "post": {
+        "tags": ["TestCase"],
+        "summary": "AI 流式生成 UI 测试用例",
+        "description": "返回 SSE 流，结合知识库增强和提示词模板",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["project_id", "primary_content"],
+                "properties": {
+                  "project_id": { "type": "integer" },
+                  "primary_content": { "type": "string", "description": "需求内容" },
+                  "hint": { "type": "string", "description": "生成提示" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "SSE 流式响应",
+            "content": { "text/event-stream": { "schema": { "$ref": "#/components/schemas/SSEEvent" } } }
+          }
+        }
+      }
+    },
+    "/test_case/generate": {
+      "post": {
+        "tags": ["TestCase"],
+        "summary": "异步 AI 生成 UI 测试用例",
+        "description": "创建生成任务立即返回，后台线程执行 AI 生成",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["project_id", "primary_content"],
+                "properties": {
+                  "project_id": { "type": "integer" },
+                  "primary_content": { "type": "string" },
+                  "hint": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "返回生成任务 ID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": { "type": "integer" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": { "type": "integer", "description": "批次 ID（generation_id）" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/test_case/generations": {
+      "post": {
+        "tags": ["TestCase"],
+        "summary": "查询 AI 生成批次列表",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "project_id": { "type": "integer" },
+                  "page": { "type": "integer", "default": 1 },
+                  "pageSize": { "type": "integer", "default": 10 }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "批次列表" }
+        }
+      }
+    },
+    "/test_case/export_excel": {
+      "post": {
+        "tags": ["TestCase"],
+        "summary": "导出 UI 测试用例为 Excel",
+        "description": "返回 .xlsx 文件下载",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ids": { "type": "array", "items": { "type": "integer" }, "description": "指定用例 ID 列表" },
+                  "project_id": { "type": "integer", "description": "指定项目全部导出" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ".xlsx 文件",
+            "content": {
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+                "schema": { "type": "string", "format": "binary" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/test_case/review": {
+      "post": {
+        "tags": ["TestCase"],
+        "summary": "批量审核 UI 测试用例",
+        "description": "支持 approve / reject / mark_production 三种操作",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["ids", "action"],
+                "properties": {
+                  "ids": { "type": "array", "items": { "type": "integer" } },
+                  "action": { "type": "string", "enum": ["approve", "reject", "mark_production"] }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "审核完成" }
+        }
+      }
+    },
+    "/test_case/prompt": {
+      "get": {
+        "tags": ["TestCase"],
+        "summary": "获取 UI 测试用例生成提示词",
+        "parameters": [
+          { "name": "project_id", "in": "query", "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "提示词内容" }
+        }
+      },
+      "put": {
+        "tags": ["TestCase"],
+        "summary": "保存 UI 测试用例生成提示词",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["content"],
+                "properties": {
+                  "project_id": { "type": "integer", "nullable": true },
+                  "content": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "保存成功" }
+        }
+      }
+    },
+    "/api_document/query_by_page": {
+      "post": {
+        "tags": ["ApiDocument"],
+        "summary": "分页查询接口文档",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "page": { "type": "integer", "default": 1 },
+                  "pageSize": { "type": "integer", "default": 10 },
+                  "project_id": { "type": "integer" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "分页数据" }
+        }
+      }
+    },
+    "/api_document/query_by_id": {
+      "get": {
+        "tags": ["ApiDocument"],
+        "summary": "查询接口文档详情",
+        "parameters": [
+          { "name": "id", "in": "query", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "文档详情" }
+        }
+      }
+    },
+    "/api_document/insert": {
+      "post": {
+        "tags": ["ApiDocument"],
+        "summary": "创建接口文档",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["title"],
+                "properties": {
+                  "project_id": { "type": "integer" },
+                  "title": { "type": "string" },
+                  "source": { "type": "string", "enum": ["swagger", "manual"], "default": "manual" },
+                  "content": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "创建成功" }
+        }
+      }
+    },
+    "/api_document/update": {
+      "put": {
+        "tags": ["ApiDocument"],
+        "summary": "更新接口文档",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["id"],
+                "properties": {
+                  "id": { "type": "integer" },
+                  "title": { "type": "string" },
+                  "content": { "type": "string" },
+                  "source": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "更新成功" }
+        }
+      }
+    },
+    "/api_document/delete": {
+      "delete": {
+        "tags": ["ApiDocument"],
+        "summary": "删除接口文档",
+        "parameters": [
+          { "name": "id", "in": "query", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "删除成功" }
+        }
+      }
+    },
+    "/api_document/import_swagger": {
+      "post": {
+        "tags": ["ApiDocument"],
+        "summary": "导入 Swagger JSON",
+        "description": "将 Swagger/OpenAPI 规范 JSON 导入为接口文档",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["content"],
+                "properties": {
+                  "project_id": { "type": "integer" },
+                  "title": { "type": "string" },
+                  "content": { "type": "string", "description": "Swagger JSON 内容（对象或字符串）" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "导入成功" }
+        }
+      }
+    },
+    "/api_test_case/query_by_page": {
+      "post": {
+        "tags": ["ApiTestCase"],
+        "summary": "分页查询接口测试用例",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "page": { "type": "integer", "default": 1 },
+                  "pageSize": { "type": "integer", "default": 10 },
+                  "project_id": { "type": "integer" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "分页数据" }
+        }
+      }
+    },
+    "/api_test_case/query_by_id": {
+      "get": {
+        "tags": ["ApiTestCase"],
+        "summary": "查询接口测试用例详情",
+        "parameters": [
+          { "name": "id", "in": "query", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "用例详情" }
+        }
+      }
+    },
+    "/api_test_case/insert": {
+      "post": {
+        "tags": ["ApiTestCase"],
+        "summary": "创建接口测试用例",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name"],
+                "properties": {
+                  "project_id": { "type": "integer" },
+                  "module_id": { "type": "integer", "default": 0 },
+                  "name": { "type": "string" },
+                  "priority": { "type": "string", "default": "P2" },
+                  "precondition": { "type": "string" },
+                  "api_path": { "type": "string" },
+                  "api_method": { "type": "string" },
+                  "api_type": { "type": "string", "default": "REST" },
+                  "request_params": { "type": "object", "description": "URL 查询参数" },
+                  "request_body": { "type": "object" },
+                  "request_headers": { "type": "object" },
+                  "assertions": { "type": "array", "items": { "type": "object" } },
+                  "expected": { "type": "string" },
+                  "tags": { "type": "string" },
+                  "category": { "type": "string" },
+                  "status": { "type": "string", "default": "draft" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "创建成功" }
+        }
+      }
+    },
+    "/api_test_case/insert_batch": {
+      "post": {
+        "tags": ["ApiTestCase"],
+        "summary": "批量创建接口测试用例",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["cases"],
+                "properties": {
+                  "project_id": { "type": "integer" },
+                  "cases": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": { "type": "string" },
+                        "api_path": { "type": "string" },
+                        "api_method": { "type": "string" },
+                        "priority": { "type": "string" },
+                        "request_params": { "type": "object" },
+                        "request_body": { "type": "object" },
+                        "request_headers": { "type": "object" },
+                        "assertions": { "type": "array" },
+                        "expected": { "type": "string" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "批量创建成功" }
+        }
+      }
+    },
+    "/api_test_case/update": {
+      "put": {
+        "tags": ["ApiTestCase"],
+        "summary": "更新接口测试用例",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["id"],
+                "properties": {
+                  "id": { "type": "integer" },
+                  "name": { "type": "string" },
+                  "priority": { "type": "string" },
+                  "api_path": { "type": "string" },
+                  "api_method": { "type": "string" },
+                  "status": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "更新成功" }
+        }
+      }
+    },
+    "/api_test_case/delete": {
+      "delete": {
+        "tags": ["ApiTestCase"],
+        "summary": "删除接口测试用例",
+        "parameters": [
+          { "name": "id", "in": "query", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "删除成功" }
+        }
+      }
+    },
+    "/api_test_case/process_with_ai_stream": {
+      "post": {
+        "tags": ["ApiTestCase"],
+        "summary": "AI 流式生成接口测试用例",
+        "description": "返回 SSE 流，支持传入接口文档 ID 自动解析",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["project_id", "primary_content"],
+                "properties": {
+                  "project_id": { "type": "integer" },
+                  "primary_content": { "type": "string", "description": "接口文档内容或文档 ID" },
+                  "hint": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "SSE 流式响应",
+            "content": { "text/event-stream": { "schema": { "$ref": "#/components/schemas/SSEEvent" } } }
+          }
+        }
+      }
+    },
+    "/api_test_case/generate_pytest_script": {
+      "post": {
+        "tags": ["ApiTestCase"],
+        "summary": "生成 pytest 脚本",
+        "description": "根据接口测试用例生成可执行的 pytest + requests + allure 脚本文件",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ids": { "type": "array", "items": { "type": "integer" } },
+                  "project_id": { "type": "integer" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "脚本生成成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": { "type": "integer" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "filepath": { "type": "string" },
+                        "cases_count": { "type": "integer" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api_test_case/execute": {
+      "post": {
+        "tags": ["ApiTestCase"],
+        "summary": "执行接口测试用例",
+        "description": "单条或批量执行，返回执行结果",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ids": { "type": "array", "items": { "type": "integer" } },
+                  "project_id": { "type": "integer" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "执行完成",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": { "type": "integer" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "execution_id": { "type": "string" },
+                        "total": { "type": "integer" },
+                        "results": { "type": "array", "items": { "type": "object" } }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api_test_case/execution_result": {
+      "get": {
+        "tags": ["ApiTestCase"],
+        "summary": "查询单次执行结果",
+        "parameters": [
+          { "name": "id", "in": "query", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "执行记录详情" }
+        }
+      }
+    },
+    "/api_test_case/execution_history": {
+      "get": {
+        "tags": ["ApiTestCase"],
+        "summary": "查询项目执行历史",
+        "description": "按 execution_id 分组返回",
+        "parameters": [
+          { "name": "project_id", "in": "query", "required": true, "schema": { "type": "integer" } },
+          { "name": "page", "in": "query", "schema": { "type": "integer", "default": 1 } },
+          { "name": "pageSize", "in": "query", "schema": { "type": "integer", "default": 20 } }
+        ],
+        "responses": {
+          "200": { "description": "执行历史列表" }
+        }
+      }
+    },
+    "/api_test_case/report": {
+      "get": {
+        "tags": ["ApiTestCase"],
+        "summary": "下载 HTML 测试报告",
+        "parameters": [
+          { "name": "execution_id", "in": "query", "required": true, "schema": { "type": "string" } },
+          { "name": "format", "in": "query", "schema": { "type": "string", "default": "html" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "HTML 报告下载",
+            "content": {
+              "text/html": { "schema": { "type": "string", "format": "binary" } }
+            }
+          }
+        }
+      }
+    },
+    "/api_test_case/prompt": {
+      "get": {
+        "tags": ["ApiTestCase"],
+        "summary": "获取接口测试用例生成提示词",
+        "parameters": [
+          { "name": "project_id", "in": "query", "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "提示词内容" }
+        }
+      },
+      "put": {
+        "tags": ["ApiTestCase"],
+        "summary": "保存接口测试用例生成提示词",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["content"],
+                "properties": {
+                  "project_id": { "type": "integer", "nullable": true },
+                  "content": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "保存成功" }
+        }
+      }
+    },
+    "/knowledge/upload": {
+      "post": {
+        "tags": ["Knowledge"],
+        "summary": "上传知识库文件",
+        "description": "支持 md / txt / docx / doc / pdf，自动解析并向量化",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": ["file", "project_id"],
+                "properties": {
+                  "file": { "type": "string", "format": "binary" },
+                  "project_id": { "type": "integer" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "上传成功" }
+        }
+      }
+    },
+    "/knowledge/list": {
+      "get": {
+        "tags": ["Knowledge"],
+        "summary": "获取项目知识库文件列表",
+        "parameters": [
+          { "name": "project_id", "in": "query", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "文件列表" }
+        }
+      }
+    },
+    "/knowledge/delete": {
+      "delete": {
+        "tags": ["Knowledge"],
+        "summary": "删除知识库文件及向量数据",
+        "parameters": [
+          { "name": "id", "in": "query", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "删除成功" }
+        }
+      }
+    },
+    "/knowledge/detail": {
+      "get": {
+        "tags": ["Knowledge"],
+        "summary": "查看文件详情及分块",
+        "parameters": [
+          { "name": "id", "in": "query", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "文件信息及所有分块" }
+        }
+      }
+    },
+    "/knowledge/retrieve": {
+      "post": {
+        "tags": ["Knowledge"],
+        "summary": "向量检索知识库",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["project_id", "query"],
+                "properties": {
+                  "project_id": { "type": "integer" },
+                  "query": { "type": "string" },
+                  "top_k": { "type": "integer", "default": 5 }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "检索结果",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": { "type": "integer" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "results": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "content": { "type": "string" },
+                              "score": { "type": "number" },
+                              "file_id": { "type": "integer" }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prompt/default": {
+      "get": {
+        "tags": ["Prompt"],
+        "summary": "获取系统默认提示词",
+        "parameters": [
+          { "name": "module", "in": "query", "required": true, "schema": { "type": "string", "enum": ["requirement_review", "ui_test_case", "api_test_case", "api_assertion", "image_analysis"] } }
+        ],
+        "responses": {
+          "200": { "description": "默认提示词" }
+        }
+      }
+    },
+    "/prompt/project": {
+      "get": {
+        "tags": ["Prompt"],
+        "summary": "获取项目级提示词",
+        "description": "有项目级覆盖反覆盖，无覆盖返默认",
+        "parameters": [
+          { "name": "project_id", "in": "query", "required": true, "schema": { "type": "integer" } },
+          { "name": "module", "in": "query", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "提示词内容" }
+        }
+      },
+      "put": {
+        "tags": ["Prompt"],
+        "summary": "保存项目级提示词覆盖",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["project_id", "module", "content"],
+                "properties": {
+                  "project_id": { "type": "integer" },
+                  "module": { "type": "string" },
+                  "content": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "保存成功" }
+        }
+      },
+      "delete": {
+        "tags": ["Prompt"],
+        "summary": "删除项目级覆盖，恢复默认",
+        "parameters": [
+          { "name": "project_id", "in": "query", "required": true, "schema": { "type": "integer" } },
+          { "name": "module", "in": "query", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "已恢复默认提示词" }
+        }
+      }
+    },
+    "/system/health": {
+      "get": {
+        "tags": ["System"],
+        "summary": "健康检查",
+        "description": "返回服务状态和数据库连通性",
+        "responses": {
+          "200": {
+            "description": "健康状态",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": { "type": "integer" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "status": { "type": "string", "enum": ["UP", "DEGRADED"] },
+                        "timestamp": { "type": "string" },
+                        "database": { "type": "string", "enum": ["OK", "DOWN", "SLOW"] },
+                        "db_latency_ms": { "type": "integer" },
+                        "error": { "type": "string" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/system/stats": {
+      "get": {
+        "tags": ["System"],
+        "summary": "系统统计信息",
+        "description": "返回项目数、测试用例数、API 用例数等",
+        "responses": {
+          "200": {
+            "description": "统计信息",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": { "type": "integer" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "projects": { "type": "integer" },
+                        "test_cases": { "type": "integer" },
+                        "api_test_cases": { "type": "integer" },
+                        "today_new_cases": { "type": "integer" },
+                        "token_usage": {
+                          "type": "object",
+                          "properties": {
+                            "total_tokens": { "type": "integer" },
+                            "requests": { "type": "integer" }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/system/token_usage": {
+      "get": {
+        "tags": ["System"],
+        "summary": "Token 使用统计",
+        "parameters": [
+          { "name": "project_id", "in": "query", "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Token 用量" }
+        }
+      }
+    },
+    "/system/logs": {
+      "get": {
+        "tags": ["System"],
+        "summary": "操作日志",
+        "parameters": [
+          { "name": "page", "in": "query", "schema": { "type": "integer", "default": 1 } },
+          { "name": "pageSize", "in": "query", "schema": { "type": "integer", "default": 20 } },
+          { "name": "module", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "日志列表" }
+        }
+      }
+    },
+    "/system/test_llm_connection": {
+      "post": {
+        "tags": ["System"],
+        "summary": "测试 LLM 连通性",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["llm_url", "llm_key", "llm_model"],
+                "properties": {
+                  "llm_url": { "type": "string" },
+                  "llm_key": { "type": "string" },
+                  "llm_model": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "连接测试结果",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": { "type": "integer" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "connected": { "type": "boolean" },
+                        "response": { "type": "string" },
+                        "latency_ms": { "type": "integer" },
+                        "error": { "type": "string" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

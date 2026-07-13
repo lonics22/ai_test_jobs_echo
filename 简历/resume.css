@@ -1,0 +1,232 @@
+/* ========================================
+   Markdown Resume Theme — CyC2018 风格
+   ======================================== */
+
+/* ===== Global ===== */
+:root {
+  --primary: #1a73e8;
+  --text: #333;
+  --text-light: #666;
+  --border: #ddd;
+  --bg: #fff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 14px;
+}
+
+body {
+  font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+  color: var(--text);
+  background: #f5f5f5;
+  line-height: 1.6;
+  padding: 20px;
+}
+
+/* ===== Page Container ===== */
+#write {
+  max-width: 800px;
+  margin: 0 auto;
+  background: var(--bg);
+  padding: 50px 60px 40px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+}
+
+/* ===== Header ===== */
+.resume-header {
+  text-align: center;
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid var(--primary);
+}
+
+.resume-header h1 {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+  letter-spacing: 2px;
+}
+
+.resume-header .subtitle {
+  font-size: 15px;
+  color: var(--primary);
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+.resume-header .contact-info {
+  font-size: 12.5px;
+  color: var(--text-light);
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+}
+
+.resume-header .contact-info span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.resume-header .contact-info .icon {
+  width: 14px;
+  height: 14px;
+  vertical-align: middle;
+  fill: var(--text-light);
+}
+
+/* ===== Section Headers ===== */
+h2 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--primary);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 6px;
+  margin: 22px 0 12px;
+  position: relative;
+}
+
+h2::before {
+  content: "";
+  display: inline-block;
+  width: 3px;
+  height: 16px;
+  background: var(--primary);
+  margin-right: 8px;
+  vertical-align: middle;
+  border-radius: 2px;
+}
+
+/* ===== Section Content ===== */
+p {
+  margin: 4px 0;
+  font-size: 13px;
+}
+
+ul {
+  padding-left: 18px;
+  margin: 4px 0;
+}
+
+li {
+  font-size: 13px;
+  margin-bottom: 3px;
+  line-height: 1.5;
+}
+
+strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* ===== Entry Header (公司/项目标题) ===== */
+.entry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: 12px;
+}
+
+.entry-header .title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.entry-header .title .role {
+  font-weight: 400;
+  color: var(--text-light);
+  font-size: 13px;
+}
+
+.entry-header .date {
+  font-size: 12px;
+  color: var(--text-light);
+  white-space: nowrap;
+}
+
+.entry-sub {
+  font-size: 12px;
+  color: var(--text-light);
+  margin-bottom: 4px;
+}
+
+/* ===== Tag / Badge ===== */
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin: 6px 0 4px;
+}
+
+.tag {
+  display: inline-block;
+  background: #e8f0fe;
+  color: var(--primary);
+  font-size: 11px;
+  padding: 1px 8px;
+  border-radius: 3px;
+  font-weight: 500;
+}
+
+/* ===== Highlight Grid ===== */
+.highlight-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 20px;
+  margin: 6px 0;
+}
+
+.highlight-item {
+  font-size: 13px;
+  padding-left: 14px;
+  position: relative;
+  line-height: 1.5;
+}
+
+.highlight-item::before {
+  content: "▸";
+  position: absolute;
+  left: 0;
+  color: var(--primary);
+}
+
+/* ===== 技能标签行 ===== */
+.skill-line {
+  margin: 4px 0;
+  font-size: 13px;
+}
+
+.skill-line .label {
+  font-weight: 600;
+  display: inline-block;
+  min-width: 70px;
+  color: var(--text);
+}
+
+/* ===== Print ===== */
+@media print {
+  body {
+    background: var(--bg);
+    padding: 0;
+  }
+
+  #write {
+    box-shadow: none;
+    padding: 40px 50px 30px;
+  }
+
+  .tag {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
