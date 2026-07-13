@@ -6,3 +6,12 @@ node_modules/
 
 # Agent working files
 doct/.agents/
+
+# Large audio files
+他人面试录音/*.m4a
+
+# Large files over 50MB
+*.m4a
+*.mp4
+*.mov
+*.zip
