@@ -58,6 +58,12 @@
   summary::-webkit-details-marker { display: none; }
   summary .q-num { display: inline-flex; align-items: center; justify-content: center; min-width: 28px; height: 28px; border-radius: 50%; background: #e8f0fe; color: #1a73e8; font-size: 13px; font-weight: 600; flex-shrink: 0; }
   section#cat-5 summary .q-num { background: #ffebee; color: #c62828; }
+  .reflection-divider { display: flex; align-items: center; gap: 12px; margin: 28px 0 16px; padding: 12px 16px; background: #fff8e1; border-radius: 10px; border-left: 4px solid #f57c00; font-weight: 600; font-size: 15px; color: #e65100; }
+  .reflection-divider::before { content: ''; flex: 1; height: 1px; background: linear-gradient(to right, transparent, #f57c00, transparent); display: none; }
+  .reflection-divider .icon { font-size: 20px; }
+  .reflection-q { border-left: 3px solid #f57c00 !important; background: #fffaf0 !important; }
+  .reflection-q summary .q-num { background: #fff3e0 !important; color: #e65100 !important; }
+  .reflection-q .tag { background: #fff3e0; color: #e65100; }
   summary .tag { font-size: 11px; padding: 1px 8px; border-radius: 10px; margin-left: auto; flex-shrink: 0; background: #e8f0fe; color: #1a73e8; }
   .q-body { padding: 0 16px 16px 52px; font-size: 14px; line-height: 1.7; color: #444; }
   .q-body p { margin: 6px 0; }
@@ -150,19 +156,10 @@
     el.className = 'hit-counter lv' + getHitLevel(val) + (el.classList.contains('pulse') ? ' pulse' : '');
   }
 
-  // ── 加载数据（双文件） ──
+  // ── 加载数据（双文件合并） ──
   Promise.all([
-    fetch('./data.json').then(function(res) {
-      if (!res.ok) throw new Error('data.json: HTTP ' + res.status);
-      return res.json();
-    }),
-    fetch('./interview-1.json').then(function(res) {
-      if (!res.ok) throw new Error('interview-1.json: HTTP ' + res.status);
-      return res.json();
-    })
-  ])
-      return res.json();
-    })
+    fetch('./data.json').then(function(r) { if (!r.ok) throw new Error('data.json: HTTP ' + r.status); return r.json(); }),
+    fetch('./interview-1.json').then(function(r) { if (!r.ok) throw new Error('interview-1.json: HTTP ' + r.status); return r.json(); })
   ])
     .then(function(results) {
       allData = results[0].concat(results[1]);
@@ -232,20 +229,28 @@
     var html = '<section id="' + cat.id + '">';
     html += '<h2><span class="collapse-icon">▼</span> ' + cat.icon + ' ' + escapeHtml(cat.title) + ' <span class="badge">' + escapeHtml(cat.badge) + '</span></h2>';
     html += '<div class="cat-body">';
+    var insertedReflectDivider = false;
     for (var q = 0; q < cat.questions.length; q++) {
-      html += renderQuestion(cat.id, cat.questions[q]);
+      // cat-5: insert reflection divider before Q14
+      if (cat.id === 'cat-5' && !insertedReflectDivider && cat.questions[q].num >= 14) {
+        html += '<div class="reflection-divider"><span class="icon">📌</span> 面试反思与改进建议</div>';
+        insertedReflectDivider = true;
+      }
+      html += renderQuestion(cat.id, cat.questions[q], cat.id === 'cat-5' && cat.questions[q].num >= 14);
     }
     html += '</div></section>';
     return html;
   }
 
-  function renderQuestion(catId, q) {
+  function renderQuestion(catId, q, isReflection) {
     var hitKey = getHitKey(catId, q.num);
     var hitVal = loadHit(hitKey);
     var hitLevel = getHitLevel(hitVal);
+    var cls = isReflection ? ' class="reflection-q"' : '';
+    var tagHtml = isReflection ? '<span class="tag">改进点</span>' : '';
     var hitHtml = '<span class="hit-counter lv' + hitLevel + '" data-hit-key="' + hitKey + '" title="左键+1，右键重置">' + hitVal + '次提到</span>';
-    return '<details>' +
-      '<summary><span class="q-num">' + q.num + '</span>' + escapeHtml(q.title) + hitHtml + '</summary>' +
+    return '<details' + cls + '>' +
+      '<summary><span class="q-num">' + q.num + '</span>' + escapeHtml(q.title) + tagHtml + hitHtml + '</summary>' +
       '<div class="q-body">' + q.answer + '</div>' +
     '</details>';
   }
