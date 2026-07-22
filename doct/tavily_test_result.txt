@@ -1,0 +1,24 @@
+{
+  "query": "Bitcoin price 2025",
+  "follow_up_questions": null,
+  "answer": null,
+  "images": [],
+  "results": [
+    {
+      "url": "https://charts.bitbo.io/price/2025",
+      "title": "Bitcoin Price 2025",
+      "content": "Start of year Price: $94,601.94 Highest Price: $124,748.85 on October 6th, 2025 Lowest Price: $76,370.46 on April 8th, 2025 End of year Price: $87,703.64",
+      "score": 0.9477354,
+      "raw_content": null
+    },
+    {
+      "url": "https://www.forbes.com/sites/digital-assets/article/can-bitcoin-price-hit-150000-2025",
+      "title": "Can Bitcoin's Price Hit $150000 In 2025? Analyzing The ...",
+      "content": "# Can Bitcoin’s Price Hit $150,000 In 2025? Could Bitcoin hit $150k in 2025? After breaching six figures for the first time in March and notching an all-time high near $112,000 in May, the world’s largest digital asset has slipped into a tight $103,000-$108,000 range. Traders are asking the same question they posed during every post-halving cycle: *how high can the bitcoin price go*—and could $150,000 arrive as soon as next year? This article dissects recent price action, the drivers that could push or cap gains and the expert forecasts that frame the debate. More than 30% of bitcoin’s circulating supply now sits in the hands of exchanges, ETFs, public companies and even sovereign entities, Gemini’s U.S. Strategic Bitcoin Reserve report shows, an all-time high that speaks to deepening mainstream acceptance. A correction to the low-$90s in late-2025, followed by a Q4 surge, could still land BTC above $150,000 by New Year’s Eve. In other words, yes—*but probably not in a straight line*.",
+      "score": 0.9154545,
+      "raw_content": null
+    }
+  ],
+  "response_time": 1.84,
+  "request_id": "5df43bef-ad95-4bea-a93f-35c6a45faa55"
+}

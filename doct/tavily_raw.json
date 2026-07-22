@@ -1,0 +1,45 @@
+{
+  "query": "Bitcoin",
+  "follow_up_questions": null,
+  "answer": null,
+  "images": [],
+  "results": [
+    {
+      "url": "https://en.wikipedia.org/wiki/Bitcoin",
+      "title": "Bitcoin",
+      "content": "# Bitcoin. Based on a free-market ideology, bitcoin was invented in 2008 when an unknown person published a white paper under the pseudonym of Satoshi Nakamoto. Use of bitcoin as a currency began in 2009, with the release of its open-source implementation.: ch. 1 From 2021 to 2025, El Salvador adopted it as legal tender currency before revoking it. As bitcoin is pseudonymous, its use by criminals has attracted the attention of regulators, leading to its ban by several countries. Bitcoin works through the collaboration of computers, each of which acts as a node \"Node (networking)\") in the peer-to-peer bitcoin network. Transactions are validated through the use of cryptography, preventing one person from spending another person's bitcoin, as long as the owner of the bitcoin keeps certain sensitive data secret.: ch. Consensus \"Consensus (computer science)\") between nodes about the content of the blockchain is achieved using a computationally intensive process based on proof of work, called mining, which is performed by purpose-built computers.: ch.",
+      "score": 0.75723875,
+      "raw_content": null
+    },
+    {
+      "url": "https://bitcoin.org",
+      "title": "Bitcoin - Open source P2P money",
+      "content": "Bitcoin is an innovative payment network and a new kind of money. Find all you need to know and get started with Bitcoin on bitcoin.org.",
+      "score": 0.75355774,
+      "raw_content": null
+    },
+    {
+      "url": "https://www.bitcoin.com",
+      "title": "Buy Bitcoin & cryptocurrency | Wallet, news, education.",
+      "content": "# The home of bitcoin. Trading Bitcoin.com App Trending News Crypto Games Learning Center. ## Buy, Sell, and Swap crypto in one place. Image 5: Hero Trading Platform. Image 6: Trading Hero overlay coins. Manage crypto, trade with ease, and earn token rewards in a beginner-friendly mobile wallet. Image 7: Illustration Send Btc. Earn up to 30% APY on your crypto, paid in Bitcoin! Image 8: Bitcoin.com Wallet App Hero image. Image 10: Trending News Hero. Image 17: Illustration Secure Wallet. Keep your investments safe in a wallet only you can access. Image 18: Illustration Coins Arrow Up. Get live prices, charts, and market insights to trade with confidence. Buy, sell, and swap crypto in 180+ countries — anytime, anywhere. ### Bitcoin is a digital currency designed for the future. ## Your all-in-one Bitcoin platform. ### Bitcoin.com App. An all-in-one wallet to buy, trade, and store Bitcoin (and other top cryptocurrencies) — secure, intuitive, and fully in your control.",
+      "score": 0.55998856,
+      "raw_content": null
+    },
+    {
+      "url": "https://www.coindesk.com/price/bitcoin",
+      "title": "Bitcoin price today, BTC to USD live price, marketcap and chart | CoinDesk",
+      "content": "# Bitcoin BTC. What's the latest BTC news? # Bitcoin. ## BTC. ## Bitcoin Information. Bitcoin is a decentralized cryptocurrency that uses peer-to-peer technology and a blockchain to record transactions. Bitcoin transactions are recorded on a blockchain, which is a distributed ledger that can be accessed by anyone to verify transactions. The supply of Bitcoin is limited to 21 million coins and it is divisible to eight decimal places. A wallet is needed to use Bitcoin and it consists of a public key, which is used to send and receive payments, and a private key, which is used to control the wallet. ## Bitcoin (BTC) Price. The information collected might relate to you, your preferences or your device, and is mostly used to make the site work as you expect it to and to provide a more personalized web experience.",
+      "score": 0.5224708,
+      "raw_content": null
+    },
+    {
+      "url": "https://finance.yahoo.com/quote/BTC-USD",
+      "title": "Bitcoin BTC (BTC-USD) Live Price, News, Chart & ...",
+      "content": "2. Best 0% APR cards. 3. Best balance transfer cards. 2. Best high-yield savings accounts. 3. Best money market accounts. Cryptocurrency • USD • #1 by Market Cap. # Bitcoin USD Price (BTC-USD). Loading chart for BTC-USD. The total market value of a cryptocurrency’s circulating supply. Market Cap = Current Price × Circulating Supply. Fully-diluted value (FDV) is an estimate of a cryptocurrency’s Market Cap if the maximum supply were in circulation. FDV = Current Price × Max Supply. The total value of a cryptocurrency traded across all exchanges in the past 24 hours. The portion of total supply that is publicly available and actively circulating in the market. For others, the supply may be unlimited or undefined, in which case max supply is shown as “∞”. * All-time high  126,198.07. Bitcoin (BTC) is a cryptocurrency launched in 2010. The last known price of Bitcoin is 64,854.29482968 USD and is up 0.22 over the last 24 hours. USDC-USD  USD Coin USD.",
+      "score": 0.5164741,
+      "raw_content": null
+    }
+  ],
+  "response_time": 0.0,
+  "request_id": "7e716258-0bc6-471a-84cf-ecf7bec1a958"
+}

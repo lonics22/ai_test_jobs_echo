@@ -1,0 +1,42 @@
+STDOUT:
+
+STDERR:
+Traceback (most recent call last):
+  File "<frozen runpy>", line 203, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\王\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\Scripts\tvly.exe\__main__.py", line 5, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "C:\Users\王\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\tavily_cli\cli.py", line 153, in main
+    cli()
+    ~~~^^
+  File "C:\Users\王\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\click\core.py", line 1524, in __call__
+    return self.main(*args, **kwargs)
+           ~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\王\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\click\core.py", line 1445, in main
+    rv = self.invoke(ctx)
+  File "C:\Users\王\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\click\core.py", line 1912, in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\王\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\click\core.py", line 1308, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\王\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\click\core.py", line 877, in invoke
+    return callback(*args, **kwargs)
+  File "C:\Users\王\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\tavily_cli\common.py", line 91, in wrapper
+    return func(*args, **kwargs)
+  File "C:\Users\王\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\tavily_cli\commands\search.py", line 110, in search
+    print_search_results(response, json_mode=json_output, output_file=output_file)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\王\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\tavily_cli\output.py", line 120, in print_search_results
+    emit(data, json_mode=True, output_file=output_file, pretty=True)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\王\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\tavily_cli\output.py", line 111, in emit
+    click.echo(text)
+    ~~~~~~~~~~^^^^^^
+  File "C:\Users\王\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\click\utils.py", line 333, in echo
+    file.write(out)  # type: ignore
+    ~~~~~~~~~~^^^^^
+UnicodeEncodeError: 'gbk' codec can't encode character '\u200a' in position 474: illegal multibyte sequence
+
+Exit code: 1
