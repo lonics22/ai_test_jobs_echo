@@ -26,6 +26,7 @@ CATEGORY_MAP = {
     'cat-6': DATA_FILE,
     'cat-7': DATA_FILE,
     'cat-8': INTERVIEW_FILE,
+    'cat-record': INTERVIEW_FILE,
 }
 
 
