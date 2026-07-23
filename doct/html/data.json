@@ -11,56 +11,62 @@
         "icon": "⚙️",
         "questions": [
           {
-            "answer": "<p><strong>平台定位：</strong>基于 TestHub 开源框架做二次开发，在基础的测试管理平台上面增加了 AI 相关的增强提效能力。团队就 3 个人——我负责 AI 模块，组长负责架构和 CI/CD，一个后端做基础 API。</p><p><strong>我负责的 AI 模块：</strong>主要包括 AI 生成测试用例、AI Agent UI 自动化、AI 配置中心，prot提示词设计 这几点。</p><p><strong>第一个是 AI 生成测试用例。</strong>测试上传需求文档后，判断需求有没有图片，有图片会走LVM 视觉模型进行，图片识别转文字，给到大语言模型，系统走三段管线——先用生成用例角色生成初稿，然后还有一个AI评审测试用例的角色审核，最后按评审意见改进。生成和评审用的是不同的 Prompt 提示词，确保视角分离。最后再是个人工兜底，需要人工进行AI的测试用例的审核 审核通过以后才是个可用的测试用例。</p><p><strong>第二个是 AI Agent。</strong>基于 browser-use + LangChain，核心流程是用户输入自然语言任务 → 拆解子步骤 → Agent 主循环，里面的核心逻辑主要是（获取页面 DOM 树 → LLM 决策下一步 → 执行操作 → 验证结果，这样的循环）。核心思路是 LLM 只做决策，操作是否成功由确定性代码验证。</p><p><strong>第三个是 AI 配置中心。</strong>不同的 AI 角色独立配置提示词，每个角色可以单独也可以进行切换模型和设置参数。简单任务用flas小模型省成本，复杂推理切pro大模型保质量。</p><p><strong>结果：</strong>平台跑了将近一年，累计生成 3000 多条用例，可用率从最初的 50% 提升到 85%。团队 20 多个测试基本上都会用来提效使用。</p>",
+            "answer": "<p><strong>平台定位：</strong>基于 TestHub 开源框架做二次开发，在基础的测试管理平台上面增加了 AI 相关的增强提效能力。团队就 3 个人——我负责 AI 模块，组长负责架构和 CI/CD，一个后端做基础 API。</p><p><strong>我负责的 AI 模块：</strong>主要包括 AI 生成测试用例、AI Agent UI 自动化、AI 配置中心，prot提示词设计 这几点。</p><p><strong>第一个是 AI 生成测试用例。</strong>测试上传需求文档后，判断需求有没有图片，有图片会走LVM 视觉模型进行，图片识别转文字，给到大模型，系统走三段管线——先用生成用例角色生成初稿，然后还有一个AI评审测试用例的角色审核，最后按评审意见改进。生成和评审用的是不同的 Prompt 提示词，确保视角分离。最后再是个人工兜底，需要人工进行AI的测试用例的审核 审核通过以后才是个可用的测试用例。</p><p><strong>第二个是 AI Agent。</strong>基于 browser-use + LangChain，核心流程是用户输入自然语言任务 → 拆解子步骤 → Agent 主循环，里面的核心逻辑主要是（获取页面 DOM 树 → LLM 决策下一步 → 执行操作 → 验证结果，这样的循环）。核心思路是 LLM 只做决策，操作是否成功由确定性代码验证。</p><p><strong>第三个是 AI 配置中心。</strong>不同的 AI 角色独立配置提示词，每个角色可以单独也可以进行切换模型和设置参数。简单任务用flas小模型省成本，复杂推理切pro大模型保质量。</p><p><strong>结果：</strong>平台跑了将近一年，累计生成 3000 多条用例，可用率从最初的 50% 提升到 85%。团队 20 多个测试基本上都会用来提效使用。</p>",
             "num": 1,
             "prep_priority": "high",
             "title": "介绍下你的 AI 测试平台"
           },
           {
-            "answer": "<p><strong>统一配置层：</strong>通过 AIModelConfig 模型管理，按 role 区分 8 种角色——writer 用例生成、reviewer 用例评审、vision 图片识别、browser_use_text 浏览器 Agent、data_generator 数据生成、api_import API 分类、field_classify 字段分类、browser_use_vision 视觉 Agent。每种角色独立配置 provider、api_key、base_url、model_name、temperature。</p><p><strong>生产调度策略：</strong></p><pre>writer（用例生成）→ DeepSeek v4 flash（性价比最高）\nreviewer（用例评审）→ DeepSeek v4 pro（需要更强推理）\nvision（图片识别）→ 智谱（中文 UI 截图识别最稳）\nbrowser_use_text（浏览器 Agent）→ DeepSeek v4 flash\napi_import（API 分类）→ DeepSeek v4 flash\nfield_classify（字段分类）→ DeepSeek v4 flash</pre><p><strong>故障迁移：</strong>模型出故障时，在配置页面把对应角色的 base_url 切到备用模型。如果 DeepSeek 不稳定，把 writer 的 base_url 切到 Qwen 或通义千问，页面改一下就行，不重启服务。</p><p><strong>设计价值：</strong>多角色配置的核心好处是「按场景定模型」——简单任务不用大枪打蚊子，复杂任务不用小马拉大车。跟一个模型打天下比，成本优化约 60%，质量更稳定，单个模型故障不影响全局。</p>",
-            "num": 7,
-            "prep_priority": "high",
-            "title": "大模型选型和调度策略怎么设计"
-          },
-          {
-            "answer": "<p><strong>AI 产品测试的根本区别：</strong>传统软件输入→输出确定的，AI 产品输出有概率性——同一输入可能每次输出不同。所以测试策略需要从确定性的「对/错」升级为概率性的「分布/统计」。</p><p><strong>四层评估体系：</strong></p><p><strong>第一层 确定性验证（零容忍）：</strong>格式校验——JSON Schema、类型检查、取值范围、必填字段缺失。这部分完全自动化，零容忍。AI 输出格式错误直接标记为 Bug，跟 LLM 有没有幻觉无关。</p><p><strong>第二层 语义验证（半自动化）：</strong>输出内容是否合理、覆盖了哪些维度、有没有遗漏关键信息。可以通过构建「必须包含的 N 个要素」清单来自动化一部分。例如生成测试用例时必须包含前置条件、步骤、预期结果三要素。剩余部分靠人工抽查。</p><p><strong>第三层 一致性验证（概率性评估）：</strong>同输入跑 N 次，统计输出分布和方差。核心指标——关键要素出现率（某要素在 N 次中出现的比例不低于阈值）；合理变异率（输出有变化但都在合理范围内）；异常率（出现明显错误输出的比例 <= 阈值）。</p><p><strong>第四层 黄金集回归：</strong>人工设计种子用例集，每次版本回归必跑。种子用例建立质量基线，跟上次比、跟阈值比。质量基线不达标→分析是模型升级导致的回归还是配置问题。</p><p><strong>核心哲学——降维打击：</strong>把概率性输出的 AI 问题转化为确定性可验证的子问题。格式校验是确定性的、Schema 校验是确定性的、API 返回值校验是确定性的。AI 只负责语义理解和生成，校验层全部用确定性代码。</p>",
-            "num": 12,
+            "answer": "<p><strong>AI 产品测试的根本区别：</strong>传统软件输入→输出确定的，AI 产品输出有概率性——同一输入可能每次输出不同。所以测试策略需要从确定性的测试 升级为概率性的「统计」。</p><p><strong>四层评估体系：</strong></p><p><strong>第一层 确定性验证（零容忍）： </strong>对于AI 生成的内容进行确定性校验 比如格式校验——JSON 类型检查、取值范围、必填字段缺失。</p><p><strong>第二层 语义验证（半自动化）：</strong>输出内容是否合理、覆盖了哪些维度、有没有遗漏关键信息。可以通过构建「必须包含的 N 个要素」清单来自动化一部分。例如生成测试用例时必须包含前置条件、步骤、预期结果三要素。剩余部分靠人工抽查。</p><p><strong>第三层 一致性验证（概率性评估）：</strong>同输入跑 N 次，统计输出差别。一些关键要素出现率，合理变化率，异常率等等</p><p>关键要素出现率（某要素在 N 次中出现的比例不低于阈值）；</p><p>合理变化率=（输出有变化但都在合理范围内）；</p><p>异常率（出现明显错误输出的比例 &lt;= 阈值）。</p><p><br></p><p><br></p><p><strong>第四层 黄金集回归：</strong>人工设计一些黄金用例集，每次版本回归必跑。</p><p>种子用例建立质量基线，跟上次比、跟阈值比。</p><p>质量基线不达标→分析是模型升级导致的回归还是配置问题。</p><p><strong>核心哲学——降维打击：</strong>把概率性输出的 AI 问题转化为确定性可验证的子问题。格式校验是确定性的、Schema 校验是确定性的、API 返回值校验是确定性的。AI 只负责语义理解和生成，校验层全部用确定性代码。</p>",
+            "num": 2,
             "prep_priority": "high",
             "title": "怎么测试一个 AI 产品的输出质量"
           },
           {
             "answer": "<p><strong>自动化回归覆盖率 90%+：</strong>这个覆盖率不是代码行覆盖率，是业务场景的覆盖率。具体做法是先把核心业务链路梳理出来，以 ERP 为例——采购→入库→财务核销这条主链路，加上退货、部分入库、价格变更这些分支场景，总共 40 多个业务场景。自动化覆盖了其中 37 个以上，算下来 90%+。</p><p>没覆盖到的要么是新增业务还没来得及写脚本，要么是太边缘手测更划算。</p><p><strong>脚本维护成本降低 40%：</strong>这个对比的是传统 Selenium 写 XPath/CSS 定位符的方式和优化后的对比。优化来自两个方向：</p><p>一是页面对象模型重构——把元素定位和业务操作分离，前端改版时只改定位层，不改业务逻辑层。</p><p>二是 AI Agent 介入复杂 E2E 场景——用自然语言写 Prompt 代替写脚本，页面小改动 AI 自适应。</p><p><strong>40% 怎么算的：</strong>看版本周期内的脚本维护工时。大概的的降幅。</p>",
-            "num": 15,
+            "num": 3,
             "prep_priority": "high",
             "title": "自动化回归覆盖率 90%+，脚本维护成本降低 40% 这个指标是如何体现的"
           },
           {
             "answer": "<p><strong>设计思路：</strong>把测试数据按业务场景拆成可复用的最小单元，每个单元封装成一个造数工具。用户在前端勾选需要的工具，填写参数，一键生成整套测试数据。</p><p><strong>51个造数工具按7大场景分类：</strong></p><p><strong>第一，基础数据（约8个）</strong>——创建用户、创建角色、分配权限、配置环境参数等。这是造其他数据的前置条件。</p><p><strong>第二，业务单据（约12个）</strong>——创建订单、入库单、出库单、采购单、财务凭证、发票等。覆盖ERP核心业务。</p><p><strong>第三，交易数据（约10个）</strong>——申购单、赎回单、持仓记录、交易流水、资金流水、利息记录等。覆盖交易所业务。</p><p><strong>第四，JSON/接口数据（约6个）</strong>——Mock接口返回、构造特定格式的JSON报文、生成签名参数等。配合接口测试使用。</p><p><strong>第五，加解密工具（约5个）</strong>——MD5加密、Base64编解码、JWT Token生成和解析、RSA加解密。测试签名和鉴权时用。</p><p><strong>第六，编码转换工具（约5个）</strong>——Unicode转中文、时间戳转日期、URL编解码、HTML转义。日志分析和报文比对时用。</p><p><strong>第七，批量生成（约5个）</strong>——按模板批量生成100条订单、按规则批量生成用户等。性能测试和大数据测试时用。</p><p><strong>效果数据：</strong>造数效率提升约60%。以前造一套交易所E2E测试数据要20-30分钟，现在打开数据工厂勾几个工具点一下，2-3分钟搞定。</p>",
-            "num": 16,
+            "num": 4,
             "prep_priority": "high",
             "title": "测试数据工厂怎么设计的，51个造数工具怎么分类"
           },
           {
+            "answer": "<p><strong>统一配置层：</strong>通过 AIModelConfig 模型管理，按 role 区分 8 种角色——writer 用例生成、reviewer 用例评审、vision 图片识别、browser_use_text 浏览器 Agent、data_generator 数据生成、api_import API 分类、field_classify 字段分类、browser_use_vision 视觉 Agent。每种角色独立配置 provider、api_key、base_url、model_name、temperature。</p><p><strong>生产调度策略：</strong></p><pre>writer（用例生成）→ DeepSeek v4 flash（性价比最高）\nreviewer（用例评审）→ DeepSeek v4 pro（需要更强推理）\nvision（图片识别）→ 智谱（中文 UI 截图识别最稳）\nbrowser_use_text（浏览器 Agent）→ DeepSeek v4 flash\napi_import（API 分类）→ DeepSeek v4 flash\nfield_classify（字段分类）→ DeepSeek v4 flash</pre><p><strong>故障迁移：</strong>模型出故障时，在配置页面把对应角色的 base_url 切到备用模型。如果 DeepSeek 不稳定，把 writer 的 base_url 切到 Qwen 或通义千问，页面改一下就行，不重启服务。</p><p><strong>设计价值：</strong>多角色配置的核心好处是「按场景定模型」——简单任务不用大枪打蚊子，复杂任务不用小马拉大车。跟一个模型打天下比，成本优化约 60%，质量更稳定，单个模型故障不影响全局。</p>",
+            "num": 5,
+            "prep_priority": "high",
+            "title": "大模型选型和调度策略怎么设计"
+          },
+          {
             "answer": "<p><strong>8种定位策略：</strong></p><p><strong>1. ID定位</strong>——最高优先级，唯一且稳定。driver.find_element(By.ID, 'login-btn')</p><p><strong>2. CSS Selector</strong>——第二优先级，速度快、语法灵活。#login-btn .submit</p><p><strong>3. XPath定位</strong>——第三优先级，功能最强但性能最差。//button[@class='submit']</p><p><strong>4. Name属性</strong>——表单元素常用。</p><p><strong>5. Class Name</strong>——按样式类定位，但多个元素可能共用一个class。</p><p><strong>6. Tag Name</strong>——按HTML标签定位，最不精确，很少单独用。</p><p><strong>7. Link Text / Partial Link Text</strong>——专门定位链接。</p><p><strong>8. AI视觉定位</strong>——AI平台的增强能力。用LVM模型识别页面截图中的目标元素位置，计算坐标后点击。前端改版导致ID/XPath变了也不影响，只要UI语义没变就能定位到。</p><p><strong>降级机制——从高精度到低精度逐级降：</strong></p><p><strong>第一层，最优定位</strong>——用ID或CSS定位，速度最快、最稳定。如果定位成功，直接操作。</p><p><strong>第二层，次优降级</strong>——ID找不到时，自动降级到CSS。CSS找不到降级到XPath。XPath找不到降级到Name。每一级降级都记录日志，方便后续排查。</p><p><strong>第三层，容错降级</strong>——连续降级都失败时，触发等待机制（显式等待 + 页面刷新重试），等页面加载完成再重新定位。</p><p><strong>第四层，AI视觉兜底</strong>——前面三层全失败时，截图调用LVM视觉模型，告诉模型要点的目标元素，模型返回坐标，代码点击坐标位置。这是最后的保底方案。</p><p><strong>第五层，标记人工</strong>——AI视觉也定位失败时，截图保存现场，标记为需要人工排查。</p><p><strong>效果：</strong>加了这套降级机制后，UI自动化的误报率从原来的12%降到了3%以下。大部分降级是因为前端改版改了ID，但CSS或AI视觉能兜住，脚本不需要改。</p>",
-            "num": 17,
+            "num": 6,
             "prep_priority": "high",
             "title": "8种定位策略具体是哪8种，降级怎么设计的"
           },
           {
             "answer": "<p><strong>架构设计：</strong>两个引擎独立运行，通过统一调度层管理。调度层根据配置决定用哪个引擎执行。</p><p><strong>用Selenium的场景：</strong>核心业务回归、资金安全验证、高频率执行的用例。Selenium生态成熟、稳定性高（达到98%）、社区资源多，踩坑有现成方案。约70%的用例跑Selenium。</p><p><strong>用Playwright的场景：</strong>跨浏览器兼容性验证（Chromium + Firefox + WebKit一键切换）、需要现代API支持的场景（网络拦截、Mock接口、自动等待）。Playwright的API设计更现代，对SPA应用的支持更好，但没有Selenium的生态丰富。</p><p><strong>切换逻辑：</strong>不是手动选，是按规则自动路由。每条用例打标签（@selenium / @playwright），调度器读标签路由。如果一个场景两个引擎都支持但Selenium的稳定性更好，默认走Selenium。只有明确需要Playwright的特性（如跨浏览器）时才走Playwright。</p><p><strong>实际效果：</strong>双引擎的好处是各取所长——Selenium保稳定、Playwright补新能力。Playwright的用例约占总量的30%，主要是跨浏览器场景。Playwright的定位是Selenium的补充而不是替代，对大部分回归场景来说Selenium够用了。</p>",
-            "num": 18,
+            "num": 7,
             "prep_priority": "medium",
             "title": "Playwright + Selenium 双引擎架构怎么设计的，怎么判断用哪个"
           },
           {
-            "num": 19,
-            "title": "vebcoding的工作流",
-            "answer": "<p><strong>Web Coding 工作流：</strong></p><p>第一步，明确需求。不急着写代码，先确认输入输出——「用户输入字符串→点击按钮→显示是否为合法 JSON」。同时定义 JSON 协议规范：必须双引号、数据类型有哪些、不允许尾逗号等。</p><p>第二步，写 Prompt 描述需求给 AI 工具。要包含功能描述 + UI 要求 + 反馈方式的描述。</p><p>第三步，Review AI 生成的代码。检查逻辑是否正确、有没有边界漏处理、异常有没有覆盖。</p><p>第四步，设计测试用例。按黄金集思路——正例全覆盖各数据类型、反例覆盖语法错误、边界覆盖空/超大/特殊字符。</p><p>第五步，执行测试验证。发现问题反馈给 AI 迭代修改。</p><p><strong>AI 编程的本质：</strong>面试官想看的不是代码写多快，而是三个能力——能不能清晰描述需求给 AI（Prompt 能力）、能不能判断 AI 输出对不对（Review 能力）、能不能把 AI 纳入规范流程（工程思维）。</p>"
+            "answer": "<p><strong>Web Coding 工作流：</strong></p><p>第一步，明确需求。不急着写代码，先确认输入输出——「用户输入字符串→点击按钮→显示是否为合法 JSON」。同时定义 JSON 协议规范：必须双引号、数据类型有哪些、不允许尾逗号等。</p><p>第二步，写 Prompt 描述需求给 AI 工具。要包含功能描述 + UI 要求 + 反馈方式的描述。然后跟AI进行讨论出明确的需求，让AI 输出一个需求清单</p><p>第三步，根据需求的清单生成，一个系统的架构，拆解任务根据最小可执行的单元来拆分。</p><p>第四步，就是让AI根据任务完成最小可执行单元，并进行测试最小可执行单元。循环这个步骤知道任务全部完成。</p><p>第五步，设计黄金的测试用例。按黄金集思路——正例全覆盖各数据类型、反例覆盖语法错误、边界覆盖空/超大/特殊字符。交给AI 执行</p><p>第六步，执行测试验证。发现问题反馈给 AI 迭代修改。</p><p><strong>AI 编程的本质：</strong>而是三个能力——能不能清晰描述需求给 AI（Prompt 能力）、能不能判断 AI 输出对不对（Review 能力）、能不能把 AI 纳入规范流程（工程思维）。</p>",
+            "num": 8,
+            "title": "vebcoding的工作流"
           },
           {
-            "num": 20,
-            "title": "并行执行1000条用例怎么做并发的",
-            "answer": "<p style=\"margin: 6px 0px; color: rgb(68, 68, 68); font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, sans-serif; font-size: 14px; background-color: rgb(255, 250, 240);\">我们公司的模式和那种全量回归的模式不一样——我们是分项目组发布的，今天 A 项目组发版，明天 B 项目组发版，不存在一下子跑上千条的情况。并行最多也就 200-300 条用例同时跑，跑完大概 20-30 分钟左右。这里面还不包括 AI Agent 用例，因为 AI Agent 主要用在复杂场景和探索性测试上，不放在常规回归里。</p><p style=\"margin: 6px 0px; color: rgb(68, 68, 68); font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, sans-serif; font-size: 14px; background-color: rgb(255, 250, 240);\"><strong>为什么不需要大规模并发：</strong>分项目组发布的模式决定了每个时间点要回归的范围相对集中——只覆盖当前发版项目组涉及的模块。加上我们会用 AI 做智能回归选择，从全量用例里推荐受影响的范围，所以实际并发量不大。</p><p style=\"margin: 6px 0px; color: rgb(68, 68, 68); font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, sans-serif; font-size: 14px; background-color: rgb(255, 250, 240);\"><strong>200-300 条跑 40 分钟的原因：</strong>主要是单机串行执行，没有做多机分布式。每条用例包括环境准备、页面操作、数据校验等步骤，再加上 Selenium 本身执行速度的限制，200-300 条跑下来确实需要这个时间量级。瓶颈主要在单机执行能力上，而不是并发调度。</p><p style=\"margin: 6px 0px; color: rgb(68, 68, 68); font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, sans-serif; font-size: 14px; background-color: rgb(255, 250, 240);\"><strong>AI Agent 的定位：</strong>Agent 用例不参与日常回归，因为执行速度慢（每次操作都要调 LLM）、稳定性不如 Selenium（约 85%），更适合做复杂 E2E 场景的覆盖和探索性测试。日常回归的核心保障还是靠 Selenium + 接口自动化。</p><p style=\"margin: 6px 0px; color: rgb(68, 68, 68); font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, sans-serif; font-size: 14px; background-color: rgb(255, 250, 240);\"><strong>如果未来需要优化：</strong>如果要压执行时间，方向是 Docker 容器化 + 多 Worker 分布式执行——用例按模块拆分到不同 Worker，每台机器开 4-6 并发，把 400 分钟压到 1 小时内。但当前业务模式下优先级不高。</p>"
+            "answer": "<p style=\"margin: 6px 0px; color: rgb(68, 68, 68); font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, sans-serif; font-size: 14px; background-color: rgb(255, 250, 240);\">我们公司的模式和那种全量回归的模式不一样——我们是分项目组发布的，今天 A 项目组发版，明天 B 项目组发版，不存在一下子跑上千条的情况。并行最多也就 200-300 条用例同时跑，跑完大概 20-30 分钟左右。这里面还不包括 AI Agent 用例，因为 AI Agent 主要用在复杂场景和探索性测试上，不放在常规回归里。</p><p style=\"margin: 6px 0px; color: rgb(68, 68, 68); font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, sans-serif; font-size: 14px; background-color: rgb(255, 250, 240);\"><strong>为什么不需要大规模并发：</strong>分项目组发布的模式决定了每个时间点要回归的范围相对集中——只覆盖当前发版项目组涉及的模块。加上我们会用 AI 做智能回归选择，从全量用例里推荐受影响的范围，所以实际并发量不大。</p><p style=\"margin: 6px 0px; color: rgb(68, 68, 68); font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, sans-serif; font-size: 14px; background-color: rgb(255, 250, 240);\"><strong>200-300 条跑 40 分钟的原因：</strong>主要是单机串行执行，没有做多机分布式。每条用例包括环境准备、页面操作、数据校验等步骤，再加上 Selenium 本身执行速度的限制，200-300 条跑下来确实需要这个时间量级。瓶颈主要在单机执行能力上，而不是并发调度。</p><p style=\"margin: 6px 0px; color: rgb(68, 68, 68); font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, sans-serif; font-size: 14px; background-color: rgb(255, 250, 240);\"><strong>AI Agent 的定位：</strong>Agent 用例不参与日常回归，因为执行速度慢（每次操作都要调 LLM）、稳定性不如 Selenium（约 85%），更适合做复杂 E2E 场景的覆盖和探索性测试。日常回归的核心保障还是靠 Selenium + 接口自动化。</p><p style=\"margin: 6px 0px; color: rgb(68, 68, 68); font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, sans-serif; font-size: 14px; background-color: rgb(255, 250, 240);\"><strong>如果未来需要优化：</strong>如果要压执行时间，方向是 Docker 容器化 + 多 Worker 分布式执行——用例按模块拆分到不同 Worker，每台机器开 4-6 并发，把 400 分钟压到 1 小时内。但当前业务模式下优先级不高。</p>",
+            "num": 9,
+            "title": "并行执行1000条用例怎么做并发的"
+          },
+          {
+            "answer": "<p><strong>黄金测试用例集</strong>不是全量用例，而是性价比最高的种子集——人工设计覆盖核心功能和关键边界的少量用例，几分钟就能跑完，快速判断被测对象是否达到基本质量水平。</p><p><strong>第一步 定义协议规范：</strong></p><pre>合法 JSON 必须：\n· 根可以是对象 {} 或数组 []\n· 键名必须双引号\n· 字符串值必须双引号\n· 支持 Unicode 转义\n· 数值支持整数/小数/科学计数法/负数\n· 特殊值：true / false / null\n· 不允许尾逗号\n· 不允许单引号替代双引号\n· 不允许注释（// 或 /* */）\n· 不允许 undefined / NaN / Infinity</pre><p><strong>第二步 五层测试用例：</strong></p><p><strong>正例（合法 JSON 全覆盖）：</strong>空对象 {}、空数组 []、字符串值、数值（整数/小数/负数/科学计数法）、布尔值 true/false、null、嵌套对象、嵌套数组、混合结构、Unicode 字符、转义字符、多层嵌套。</p><p><strong>反例（不合法语法）：</strong>单引号替代双引号、键名无引号、多余尾逗号、括号不匹配、注释内容 // 和 /* */、undefined 值、函数表达式、多重根元素。</p><p><strong>边界（极限情况）：</strong>空字符串、超大数值 1e999、极深嵌套（100 层）、超长字符串（10 万字符）、空白字符包围的合法 JSON。</p><p><strong>异常输入：</strong>纯文本、HTML 代码、XML 格式、二进制数据、SQL 注入语句。</p><p><strong>种子集 vs 回归集的关系：</strong></p><p>面试官的核心提示：</p><blockquote>「最起码要把这个黄金用例集搞一个种子扔给他，然后基于种子再生成一遍回归集」</blockquote><p>种子用例人工精心设计约 20 条。AI 基于种子自动扩展约 100+ 条。种子保质量底线，AI 扩覆盖广度。这不是替代关系，是先后关系。</p>",
+            "num": 10,
+            "prep_priority": "high",
+            "title": "黄金测试用例集怎么设计（以 JSON 格式判断为例）"
           }
         ]
       },
@@ -71,15 +77,21 @@
         "questions": [
           {
             "answer": "<p><strong>核心流程：</strong>用户输入自然语言任务 → LLM 拆解为子步骤 → 获取 DOM 树 → LLM 分析决策 → 执行操作 → 验证结果 → 循环直到完成或超时。本质是 ReAct 模式在 UI 自动化领域的实例化。</p><p><strong>关键实现：</strong>测试平台基于 browser-use 框架，然后会用先用正则匹配常见操作模式（打开页面、输入、点击、断言等），对复杂任务再调 LLM 拆解后的子二次拆解。步骤列表传给  Agent进入 主循环——获取 DOM 状态、LLM 决策下一步、工具执行、回调更新进度，重复直到完成。</p><p><strong>国产模型适配：</strong>DeepSeek/Qwen 等国产模型在输出格式和稳定性上与 GPT 有差距。做了 11 处 monkey-patch，核心思路是「AI 做决策，代码做验证」——LLM 只决定做什么操作，操作是否成功的校验由确定性代码完成，不依赖 LLM 自评。</p><p><strong>核心架构图：</strong></p><pre>用户输入任务\n  ↓\nanalyze_task() → 拆解为子步骤\n  ↓\nrun_task() — 主循环（最多 100 步）\n  ├── 获取 DOM 树（文本模式）\n  ├── LLM 分析状态 + 决策下一步\n  ├── Controller 执行（click/input/select）\n  ├── on_step_end 回调（更新进度 + 状态检查）\n  └── 判断完成？→ 继续 / 完成 / 超时\n  ↓\n任务完成 / 失败</pre>",
-            "num": 2,
+            "num": 1,
             "prep_priority": "high",
             "title": "AI Agent 做 UI 自动化的完整流程是怎么实现的"
           },
           {
-            "answer": "<p><strong>主要不稳定因素：</strong>超时、幽灵点击、路径不一致、上下文丢失、LLM 输出格式变异。每个因素单独出现的概率不高但叠加起来显著影响整体成功率。</p><p><strong>分层应对策略：</strong></p><p><strong>超时控制：</strong>每步操作设 30s 超时，整体任务设 100 步上限。超时后自动回退到上一步重试，最多 3 次。三次都超时则标记失败，截图保存现场。</p><p><strong>路径一致性：</strong>在 Prompt 中要求 LLM 优先选择最短路径完成目标，减少不必要的探索。对高频任务固定初始指令格式，减少 LLM 自由发挥的空间。</p><p><strong>上下文管理：</strong>定期压缩历史对话，只保留关键状态和最近 5 步操作。核心信息（任务目标、关键数据）注入 system prompt 防止被截断。</p><p><strong>代码兜底：</strong>最关键的原则——影响数据的操作（提交/支付/删除/状态变更）全部用代码断言验证接口返回，不依赖 LLM 自评。AI 只决策做什么，代码确认做没做成。</p><p><strong>成功率数据：</strong>在 Gate.io 生产环境，200-300 条 AI Agent 用例的跑批成功率约 85%（含重试后成功）。剩余 15% 失败中，约 8% 通过自动重试恢复，5% 标记待人工确认，2% 为真实 Bug。</p>",
-            "num": 3,
+            "answer": "<p><strong>主要不稳定因素：</strong>超时、幽灵点击、路径不一致、上下文丢失、LLM 输出格式变异。每个因素单独出现的概率不高但叠加起来显著影响整体成功率。</p><p><strong>分层应对策略：</strong></p><p><strong>超时控制：</strong>每步操作设 30s 超时，整体任务设 100 步上限。超时后自动回退到上一步重试，最多 3 次。三次都超时则标记失败，截图保存现场。</p><p><strong>路径一致性：</strong>在 Prompt 中要求 LLM 优先选择最短路径完成目标，减少不必要的探索。对高频任务固定初始指令格式，减少 LLM 自由发挥的空间。</p><p><strong>上下文管理：</strong>定期压缩历史对话，只保留关键状态和最近 5 步操作。核心信息（任务目标、关键数据）注入 system prompt 防止被截断。</p><p><strong>代码兜底：</strong>最关键的原则——影响数据的操作（提交/支付/删除/状态变更）全部用代码断言验证，不依赖 LLM 自评。AI 只决策做什么，代码确认做没做成。</p><p><strong>成功率数据：</strong>在 Gate.io 生产环境，200-300 条 AI Agent 用例的跑批成功率约 85%（含重试后成功）。剩余 15% 失败中，约 8% 通过自动重试恢复，5% 标记待人工确认，2% 为真实 Bug。</p>",
+            "num": 2,
             "prep_priority": "high",
             "title": "AI Agent 的执行稳定性怎么保证"
+          },
+          {
+            "answer": "<p><strong>AI Agent 评估跟传统软件不一样——</strong>传统软件是确定性的（输入→预期输出），AI Agent 是概率性的（同一输入可能走不同路径）。所以不能只看一次结果，要看多次的场景。</p><p><strong>六维评估体系：</strong></p><p><strong>第一 单步决策正确性：</strong>构造特定上下文场景，让 Agent 必须做出某个决策，验证是否选对。例如给一个包含登录表单的页面，Agent 应该选择「输入用户名密码」而不是「跳转到其他页面」。这层确定性最高，可做成自动化验证集。</p><p><strong>第二 完整任务成功率：</strong>标准化场景跑多次统计成功率。例如 5 个 E2E 场景（登录→搜索→下单→支付）各跑 3 次，统计最终完成率。固定 temperature=0 排除随机波动。</p><p><strong>第三 鲁棒性：</strong>页面元素变动（按钮 ID 变了但语义没变）、网络超时/接口异常、中间步骤失败能否恢复、多标签页/弹窗/iframe 等复杂 UI。幽灵点击就在这层测试发现。</p><p><strong>第四 安全性：</strong>Prompt 注入——页面上恶意文本诱导 Agent 执行非预期操作；敏感信息——Agent 日志中是否输出 API Key 等；越权——Agent 能否访问不应访问的资源。</p><p><strong>第五 性能和成本：</strong>执行时间（简单任务 vs 复杂 E2E 的耗时分布）；Token 消耗（每步消耗 + 累计总量）；成本换算（按模型单价计算）。</p><p><strong>第六 一致性：</strong>同任务跑 10 次，行为路径分布、成功/失败比例、决策质量波动。核心指标是路径方差——路径差异越大越难定位问题。</p><p><strong>核心指标总结：</strong></p><pre>任务完成率 &gt;= 80%\n工具调用准确率 &gt;= 90%\n执行时间 &lt;= N 步（根据场景定）\nToken 消耗/任务 = 基线\n人工干预率 &lt;= 10%\nPrompt 注入成功率 = 0%</pre>",
+            "num": 3,
+            "prep_priority": "medium",
+            "title": "怎么评估一个 AI Agent 的质量"
           },
           {
             "answer": "<p><strong>问题定义：</strong>LLM 认为自己点击了按钮但实际没点到，或操作未生效。例如 Agent 报告「已点击登录按钮」但页面没跳转——可能点了覆盖层、点了错误坐标、或页面焦点丢失导致点击未到达目标。</p><p>面试官用「登录弹窗」反例一针见血地指出了浅层方案的漏洞：如果只靠 DOM 变化来判断操作是否成功，那输入错误密码点击登录后弹出的错误提示——DOM 也确实变了，但登录并没有成功。所以「检测 DOM 变化」远远不够。</p><p><strong>系统性方案——四层检测体系：</strong></p><p><strong>第一层 前置校验：</strong>点击前验证目标元素是否可见、可用、不被遮挡、在视口内。browser-use 的 DOM 树包含元素坐标和属性，据此判断可交互性。</p><p><strong>第二层 操作校验：</strong>点击后检查 URL 是否变化、新元素是否出现、关键元素状态是否变更。这一步区分「DOM 有变化」和「DOM 有预期的变化」。</p><p><strong>第三层 逻辑校验：</strong>通过接口响应验证操作结果——点击提交按钮后调接口确认提交是否成功。代码级断言，不依赖 LLM 判断，零误判。</p><p><strong>第四层 重试兜底：</strong>前三层任一层校验失败 → 自动回退到上一步 → 最多重试 3 次 → 截图 + DOM 快照记录失败现场 → 标记为需要人工排查。</p><p><strong>核心原则：</strong>LLM 做决策（决定做什么操作），代码做验证（确认操作是否生效）。不要依赖 LLM 自己判断自己操作成功没。</p>",
@@ -100,10 +112,10 @@
             "title": "AI Agent 和三引擎怎么协作（browser-use/Selenium/Playwright）"
           },
           {
-            "answer": "<p><strong>AI Agent 评估跟传统软件不一样——</strong>传统软件是确定性的（输入→预期输出），AI Agent 是概率性的（同一输入可能走不同路径）。所以不能只看一次结果，要看多次的场景。</p><p><strong>六维评估体系：</strong></p><p><strong>第一 单步决策正确性：</strong>构造特定上下文场景，让 Agent 必须做出某个决策，验证是否选对。例如给一个包含登录表单的页面，Agent 应该选择「输入用户名密码」而不是「跳转到其他页面」。这层确定性最高，可做成自动化验证集。</p><p><strong>第二 完整任务成功率：</strong>标准化场景跑多次统计成功率。例如 5 个 E2E 场景（登录→搜索→下单→支付）各跑 3 次，统计最终完成率。固定 temperature=0 排除随机波动。</p><p><strong>第三 鲁棒性：</strong>页面元素变动（按钮 ID 变了但语义没变）、网络超时/接口异常、中间步骤失败能否恢复、多标签页/弹窗/iframe 等复杂 UI。幽灵点击就在这层测试发现。</p><p><strong>第四 安全性：</strong>Prompt 注入——页面上恶意文本诱导 Agent 执行非预期操作；敏感信息——Agent 日志中是否输出 API Key 等；越权——Agent 能否访问不应访问的资源。</p><p><strong>第五 性能和成本：</strong>执行时间（简单任务 vs 复杂 E2E 的耗时分布）；Token 消耗（每步消耗 + 累计总量）；成本换算（按模型单价计算）。</p><p><strong>第六 一致性：</strong>同任务跑 10 次，行为路径分布、成功/失败比例、决策质量波动。核心指标是路径方差——路径差异越大越难定位问题。</p><p><strong>核心指标总结：</strong></p><pre>任务完成率 &gt;= 80%\n工具调用准确率 &gt;= 90%\n执行时间 &lt;= N 步（根据场景定）\nToken 消耗/任务 = 基线\n人工干预率 &lt;= 10%\nPrompt 注入成功率 = 0%</pre>",
-            "num": 8,
-            "prep_priority": "medium",
-            "title": "怎么评估一个 AI Agent 的质量"
+            "answer": "<p>每个 Agent 步骤完成后，框架自动执行一组断言函数，不依赖 LLM 自评，分四类操作：</p><p><strong>第一，点击操作后的验证。</strong>AI Agent 说「点了登录按钮」，代码会检查 URL 有没有按预期跳转（比如从 /login 到了 /dashboard），检查页面有没有出现预期元素（比如登录后的用户名）。</p><p><strong>第二，输入操作后的验证。</strong>AI Agent 说「在搜索框输入了关键词」，代码会获取当前输入框的值或页面的 DOM 文本，跟预期输入做比对。输入框为空或者内容不对就判定输入失败。</p><p><strong>第三，表单提交后的验证。</strong>AI Agent 说「提交了申购表单」，代码会调接口确认——查申购记录的查询接口，看数据库里有没有这笔记录。如果接口返回错误码或数据库里没有，就判定提交没成功。</p><p><strong>第四，页面跳转后的验证。</strong>AI Agent 说「跳转到了订单详情页」，代码会检查当前页面的关键标识——URL 是否包含订单号、页面标题是否正确、订单详情区域是否渲染出来。如果页面白屏或仍在原页面，就判定跳转失败。</p><p><strong>核心实现：</strong>断言函数是写死的 Python 代码，比如 assert_url_contains()、assert_element_exists()、assert_api_success()。不依赖 LLM 判断，零误判。这套体系上线后，AI Agent 的误报率从 15% 降到 3% 以下，资金相关操作（申购、赎回、划转）实现了零误报。</p>",
+            "num": 7,
+            "prep_priority": "high",
+            "title": "AI Agent 操作是否成功由确定性代码验证，具体做了哪些验证"
           }
         ]
       },
@@ -125,7 +137,7 @@
             "title": "大模型幻觉在测试场景中怎么处理"
           },
           {
-            "answer": "<p><strong>为什么不做硬编码：</strong>Prompt 是活的，需要随业务变化、模型升级、缺陷模式一起演进。写在代码里每次改 Prompt 都要发版，效率太低。所以存在数据库的 PromptConfig 表中，按 role 区分，不重启服务就能切换。</p><p><strong>管理方式：</strong>每个 role 可配多个 Prompt，通过 is_active 字段控制当前使用的版本。支持灰度切换——先在测试集上验证效果，再全量切生产。效果不好一键回滚到旧版本。</p><p><strong>迭代方式——R.O.L.E.S.T 框架：</strong></p><p>R — Role（角色）：「你是一个资深的交易所测试工程师」比「帮我写测试用例」效果好得多。角色设定 AI 的知识范围和回答风格。</p><p>O — Objective（目标）：不说「测一下接口」，说「为 POST /api/earn/subscribe 生成接口测试用例，覆盖正常申购、重复申购、金额超限、币种不支持四个场景」。</p><p>L — Level（层级要求）：控制输出格式和颗粒度。「每个用例包含：用例ID、前置条件、测试步骤、预期结果」。</p><p>E — Example（示例）：给 1-2 个例子，比写一百字描述都有用。AI 看例子就懂了要的格式和深度。</p><p>S — Source（参考材料）：给 AI 开卷考试的材料——接口文档、业务规则、历史 Bug 模式。</p><p>T — Tone（约束）：「不要编造不存在的接口」「不确定的地方标注 [需确认] 而不是自己假设」。</p><p><strong>版本迭代数据：</strong>在 Gate.io 已经迭代了 7 个版本的 writer prompt，从最初的 2 页增加到 5 页。每版先在测试集上跑一批用例验证通过率，提升了再全量切。评审通过率从初始的 55% 提升到 85%。</p>",
+            "answer": "<p><strong>为什么不做硬编码：</strong>Prompt 是活的，需要随业务变化、模型升级、缺陷模式一起演进。</p><p><br></p><p><strong>迭代方式——R.O.L.E.S.T 框架：</strong></p><p>R — Role（角色）：「你是一个资深的交易所测试工程师」比「帮我写测试用例」效果好得多。角色设定 AI 的知识范围和回答风格。</p><p>O — Objective（目标）：不说「测一下接口」，说「为 POST /api/earn/subscribe 生成接口测试用例，覆盖正常申购、重复申购、金额超限、币种不支持四个场景」。</p><p>L — Level（层级要求）：控制输出格式和颗粒度。「每个用例包含：用例ID、前置条件、测试步骤、预期结果」。</p><p>E — Example（示例）：给 1-2 个例子，比写一百字描述都有用。AI 看例子就懂了要的格式和深度。</p><p>S — Source（参考材料）：给 AI 开卷考试的材料——接口文档、业务规则、历史 Bug 模式。</p><p>T — Tone（约束）：「不要编造不存在的接口」「不确定的地方标注 [需确认] 而不是自己假设」。</p><p><strong>版本迭代数据：</strong>在 Gate.io 已经迭代了 7 个版本的 writer prompt，从最初的 2 页增加到 5 页。每版先在测试集上跑一批用例验证通过率，提升了再全量切。评审通过率从初始的 55% 提升到 85%。</p>",
             "num": 11,
             "prep_priority": "medium",
             "title": "Prompt 工程体系怎么管理"
@@ -152,7 +164,7 @@
         "icon": "🧪",
         "questions": [
           {
-            "answer": "<p>面试官好，我叫王鹏，有7年软件测试经验。</p><p>第一份工作在纬创软件，外包的恒生电子，驻场在上海黄金交易所，负责旗下易金通APP的测试工作，期间也担任过一年测试组长，核心工作是进行APP以及后台管理系统的测试，还有些总体测试进度把控、任务分配，以及协调多部门联调上线。</p><p>第二份工作在西域智慧供应链，担任测试，先后参与了财务大数据平台的全链路质量保障、Raxwell-Odoo ERP系统的迭代测试，以及官网搜索引擎优化的专项测试。也对搜索接口落地了接口自动化框架的搭建，总体还是积累了比较全面的测试技术栈。</p><p>最近一年，我参与了公司AI测试平台的测试开发工作，重点提升平台的AI能力——比如AI测试用例生成、AI Agent驱动的UI自动化、提示词工程体系设计等。</p><p>以我了解贵公司是做一些的证券的行业，我觉得比较契合的经历应该是我在黄金交易所那段经历和流程，对一些版本的控制会比较严格。然后后续也想用通过AI相关的知识能够给贵公司带来更多的测试提效。</p><p>以上就是我的基本情况，谢谢。</p>",
+            "answer": "<p>面试官好，我叫王鹏，有7年软件测试经验。</p><p>第一份工作在纬创软件，外包的恒生电子，驻场在上海黄金交易所，负责旗下易金通APP的测试工作，期间也担任过一年测试组长，核心工作是进行APP以及后台管理系统的测试，还有些总体测试进度把控、任务分配，以及协调多部门联调上线。</p><p>第二份工作在西域智慧供应链，担任测试，先后参与了财务大数据平台的全链路质量保障、Raxwell-Odoo ERP系统的迭代测试，以及官网搜索引擎优化的专项测试。也对搜索接口落地了接口自动化框架的搭建，总体还是积累了比较全面的测试技术栈。</p><p>最近一年，我参与了公司AI测试平台的测试开发工作，重点提升平台的AI能力——比如AI测试用例生成、AI Agent驱动的UI自动化、提示词工程体系设计等。</p><p>以我了解贵公司是做一些证券的行业，我觉得比较契合的经历应该是我在黄金交易所那段经历和流程，对一些版本的控制会比较严格。然后后续也想用通过AI相关的知识能够给贵公司带来更多的测试提效。</p><p>以上就是我的基本情况，谢谢。</p>",
             "num": 1,
             "prep_priority": "high",
             "title": "自我介绍-2026-7-24"
@@ -162,24 +174,6 @@
             "num": 2,
             "prep_priority": "high",
             "title": "测试用例有哪些设计方法"
-          },
-          {
-            "answer": "<p><strong>最有用的指标 vs 最没用的指标：</strong></p><p>最有用的——线上漏测率：最真实反映测试有效性的结果指标。不管过程多漂亮，线上漏测率高说明测试策略有问题。</p><p>最没用的——用例执行率、自动化覆盖率：这些是虚荣指标。执行率 100% 但测的都是低价值用例，自动化覆盖率 90% 但覆盖的都是稳定不变的接口——都不会带来质量提升。</p><p><strong>核心指标卡（推荐）：</strong></p><pre>线上漏测率（目标 <= 5%）\n→ 最真实反映测试有效性\n\n缺陷发现阶段分布\n→ 衡量测试左移效果\n\nP0 用例通过率（目标 >= 95%）\n→ 发布质量底线，低于阈值阻断发布\n\n回归集有效性\n→ 长期不发现 Bug 的用例标记为低价值</pre><p><strong>辅助指标（视场景选配）：</strong></p><p>自动化误报率——环境抖动造成的假失败（目标 <= 5%），过高说明用例设计或环境有问题。AI 生成用例可用率——AI 用例直接可用/总量的比值（目标 >= 70%），衡量 AI 辅助测试的价值。</p><p><strong>注意隐性陷阱：</strong>「指标本身变成目标后就不再是好指标了」。用例执行率 100% 但全是低价值用例、自动化覆盖率 90% 但覆盖的都是稳定不变的接口——都是典型的指标优化偏差。核心原则：指标应该引导正确行为，而不是鼓励刷数据。</p>",
-            "num": 3,
-            "prep_priority": "medium",
-            "title": "质量指标怎么定义——哪些指标真正有用"
-          },
-          {
-            "answer": "<p><strong>黄金测试用例集</strong>不是全量用例，而是性价比最高的种子集——人工设计覆盖核心功能和关键边界的少量用例，几分钟就能跑完，快速判断被测对象是否达到基本质量水平。</p><p><strong>第一步 定义协议规范：</strong></p><pre>合法 JSON 必须：\n· 根可以是对象 {} 或数组 []\n· 键名必须双引号\n· 字符串值必须双引号\n· 支持 Unicode 转义\n· 数值支持整数/小数/科学计数法/负数\n· 特殊值：true / false / null\n· 不允许尾逗号\n· 不允许单引号替代双引号\n· 不允许注释（// 或 /* */）\n· 不允许 undefined / NaN / Infinity</pre><p><strong>第二步 五层测试用例：</strong></p><p><strong>正例（合法 JSON 全覆盖）：</strong>空对象 {}、空数组 []、字符串值、数值（整数/小数/负数/科学计数法）、布尔值 true/false、null、嵌套对象、嵌套数组、混合结构、Unicode 字符、转义字符、多层嵌套。</p><p><strong>反例（不合法语法）：</strong>单引号替代双引号、键名无引号、多余尾逗号、括号不匹配、注释内容 // 和 /* */、undefined 值、函数表达式、多重根元素。</p><p><strong>边界（极限情况）：</strong>空字符串、超大数值 1e999、极深嵌套（100 层）、超长字符串（10 万字符）、空白字符包围的合法 JSON。</p><p><strong>异常输入：</strong>纯文本、HTML 代码、XML 格式、二进制数据、SQL 注入语句。</p><p><strong>种子集 vs 回归集的关系：</strong></p><p>面试官的核心提示：</p><blockquote>「最起码要把这个黄金用例集搞一个种子扔给他，然后基于种子再生成一遍回归集」</blockquote><p>种子用例人工精心设计约 20 条。AI 基于种子自动扩展约 100+ 条。种子保质量底线，AI 扩覆盖广度。这不是替代关系，是先后关系。</p>",
-            "num": 4,
-            "prep_priority": "high",
-            "title": "黄金测试用例集怎么设计（以 JSON 格式判断为例）"
-          },
-          {
-            "answer": "<p><strong>系统化排查路径：</strong></p><p>第一步，判断是否稳定复现。重跑 2-3 次，如果能稳定复现大概率是 Bug。如果时灵时不灵，优先怀疑环境问题或数据问题。</p><p>第二步，查看请求/参数。用抓包工具或测试框架的请求记录，确认请求参数是否正确、请求是否到达服务端。</p><p>第三步，看接口日志/返回码。接口返回 500/超时 → 后端问题；返回 400/参数校验失败 → 请求端问题；返回 200 但数据不对 → 业务逻辑问题。</p><p>第四步，查数据库。确认数据状态是否正确、上下游系统数据是否一致。</p><p>第五步，定位责任方。前端、接口、DB、环境、测试数据——五个可能的根因来源。</p><p><strong>AI 辅助根因分析：</strong></p><p>在 TestHub 中实现了 AI 失败根因分析：采集失败上下文 → 信息聚合为 Prompt → AI 判断根因类型 → 匹配历史相似失败 → 输出报告。准确率从初始 50% 优化到 70%。关键优化是将信息聚合结构化为三段式——「出了什么问题 + 当时的上下文 + 历史上类似的失败」。结构化输入比自由文本准确率高 20%。</p>",
-            "num": 6,
-            "prep_priority": "medium",
-            "title": "失败根因分析怎么做"
           },
           {
             "answer": "<p><strong>测试左移的核心思路：</strong>越早发现问题成本越低。需求阶段的 Bug 修复成本是测试阶段的 1/10 到 1/20。</p><p><strong>四阶段左移实践：</strong></p><p><strong>需求阶段：</strong>AI 分析 PRD 自动生成测试要点和风险提示。评审时拿着 AI 生成的测试要点跟产品和开发讨论。在 Gate.io，需求阶段发现的缺陷从 0 提升到 10%。</p><p><strong>开发阶段：</strong>推动开发自测 + CI 质量门禁。提测质量不达标（接口通过率 < 95%）打回开发自测。提测问题数减少 30%。</p><p><strong>用例设计：</strong>AI 辅助生成测试用例嵌入业务知识（历史缺陷模式、业务规则）。评审用例时发现的遗漏点反推回需求文档。</p><p><strong>线上监控反哺：</strong>Grafana + 告警规则监控线上异常。异常自动上报 → AI 分析 → 补充到用例库。形成闭环。</p><p><strong>效果数据：</strong>在 Gate.io 落地后，缺陷发现阶段分布从「测试阶段 80% + 线上 20%」变为「需求阶段 10% + 开发阶段 30% + 测试阶段 55% + 线上 5%」。线上漏测率降 30%。</p><p><strong>关键前提：</strong>左移需要开发团队的配合和信任，不能靠「强推」而是靠「证明价值」。第一次帮开发在需求阶段发现了一个他们没考虑到的边界场景后，后续的配合就顺畅了。</p>",
@@ -197,7 +191,13 @@
             "num": 9,
             "title": "进度跟预期出现偏差怎么办",
             "prep_priority": "medium",
-            "answer": "<p>这个当测试组长时遇到过几次，核心思路是「早暴露、早调整、不硬扛」。</p><p><strong>第一步，评估偏差的性质。</strong>是时间预估不准（低估了工作量），还是外部依赖掉链子（开发延期交付、环境没准备好），还是需求变更导致范围扩大？不同原因处理方式不同。时间预估的问题下次排期就把buffer打足，外部依赖的问题要提前跟相关方对齐时间节点。</p><p><strong>第二步，量化影响范围。</strong>偏差了几天？影响哪些测试活动？会不会影响上线时间？如果只是内部测试排期调整，不需要惊动项目组。但如果影响上线时间，必须在第一时间暴露给项目经理和产品经理，不能自己扛到最后一刻再说。</p><p><strong>第三步，跟项目组沟通调整方案。</strong>三个选项：加人（能不能协调资源）、减范围（砍掉低优先级的测试，保核心链路）、延期（确定新的上线时间）。我一般先推减范围——低优先级用例改手测或延后，保证P0用例全量跑。</p><p><strong>第四步，复盘沉淀。</strong>偏差的原因改进到下次的排期估算里。比如以前对跨系统联调的工作量总是低估，后来经验总结为：联调测试的时间预估是单系统测试的1.5倍。</p><p><strong>踩坑案例：</strong>有一次ERP项目财务模块上线前3天，开发临时改了核心接口的返回格式，导致自动化用例全挂了。我的处理是：先跑手动冒烟保核心链路，同时2个人通宵修脚本，上线当天凌晨4点全部修完。复盘后定了一个规则——接口定义变更必须提前通知测试并在接口文档上同步更新。</p>"
+            "answer": "<p>这个当测试组长时遇到过几次，核心思路是「早暴露、早调整、不硬扛」。</p><p><strong>第一步，评估偏差的性质。</strong>是时间预估不准（低估了工作量），还是外部依赖掉链子（开发延期交付、环境没准备好），还是需求变更导致范围扩大？不同原因处理方式不同。时间预估的问题下次排期就把buffer打足，外部依赖的问题要提前跟相关方对齐时间节点。</p><p><strong>第二步，量化影响范围。</strong>偏差了几天？影响哪些测试活动？会不会影响上线时间？如果影响上线时间，必须在第一时间暴露给项目经理和产品经理，不能自己扛到最后一刻再说。</p><p><strong>第三步，跟项目组沟通调整方案。</strong>三个选项：加人（能不能协调资源）、减范围（砍掉低优先级的测试，保核心链路）、延期（确定新的上线时间）。我一般先推减范围——低优先级用例改手测或延后，保证P0用例全量跑。</p><p><strong>第四步，复盘沉淀。</strong>偏差的原因改进到下次的排期估算里。比如以前对跨系统联调的工作量总是低估，后来经验总结为：联调测试的时间预估是单系统测试的1.5倍。</p>"
+          },
+          {
+            "num": 10,
+            "title": "测试用例的设计思路是什么",
+            "prep_priority": "high",
+            "answer": "<p>拿到一个功能，不要上来就写用例。先结构化思考，再逐层展开。</p><p><strong>第一步，明确功能边界。</strong>搞清楚这个功能到底覆盖哪些范围——包含哪些页面元素、涉及哪些操作、依赖哪些前置条件。比如一个搜索功能——搜索框、搜索按钮、搜索结果列表、筛选、排序、分页。连测什么范围都没搞清楚就写用例，后面肯定漏。</p><p><strong>第二步，按场景维度拆分。</strong>分四个维度：功能场景——核心功能是不是正常的、辅助功能是不是正常的、功能组合在一起是不是正常的。异常场景——用户操作错了会怎么样——输入不合法的内容、网络断了、权限不够、设备不支持。边界场景——输入为空、输入达到上限、连续快速操作、并发操作。体验场景——页面加载快不快、提示信息对不对、不同设备和网络下是否正常。</p><p><strong>第三步，先主路径后分支。</strong>先把用户最常用的那条路径写出来，保证主线能跑通。再逐层展开异常和边界。比如下单功能——主路径是搜索→加购→下单→支付。主路径没问题后，再展开库存不足、优惠券过期、支付失败这些分支。</p><p><strong>第四步，用例表达要清晰。</strong>每条用例包含：前置条件、测试步骤、预期结果。不需要写太长，但预期结果一定要明确——具体到什么数据、什么状态、什么表现，不能写「功能正常」这种废话。</p><p><strong>核心原则：</strong>覆盖率比深度重要。先保证场景覆盖全了，再在里面挑几个关键场景做细节的边界值组合。不要在一个场景里纠结半天，结果后面还有五个场景没看完。</p>"
           }
         ]
       },
@@ -210,7 +210,7 @@
             "num": 1,
             "title": "接口测试用例怎么设计（覆盖哪些维度）",
             "prep_priority": "high",
-            "answer": "<p>接口测试用例设计我按五个维度覆盖，</p><p><br></p><p><strong>第一，功能维度：</strong>正常请求验证返回数据结构和字段值正确。</p><p>&nbsp; 组合参数验证——必填参数、可选参数、参数组合。</p><p>&nbsp; 参数类型边界——字符串长度、数值范围、枚举值覆盖。</p><p>&nbsp; 业务状态流转——接口调用顺序导致的不同状态结果。</p><p><strong>第二，异常维度：</strong></p><p>&nbsp; 参数异常——缺参、多参、参数类型错误、参数格式非法。</p><p>&nbsp; 业务异常——余额不足、权限不足、重复操作、资源不存在。</p><p>&nbsp; 协议异常——HTTP方法错误（GET调POST）、Content-Type不匹配、请求体格式错误。</p><p>&nbsp; 鉴权异常——无Token、Token过期、Token伪造、权限不足。</p><p><strong>第三，数据维度：</strong>数据一致性——接口返回和数据库记录一致。</p><p>&nbsp; 幂等性——相同请求重复提交结果一致。</p><p>&nbsp; 数据边界——分页参数（第1页/最后一页/超出范围）、大数据量返回超时处理。</p><p>&nbsp; 数据隔离——A用户不能操作B用户的数据。</p><p><strong>第四，性能维度：</strong>接口响应时间在合理范围（一般&lt;500ms/复杂&lt;2s）。</p><p>&nbsp; 并发请求下数据一致性不破坏。批量接口的性能基线。</p><p><strong>第五，安全维度：</strong>SQL注入/XSS测试、敏感信息加密传输、接口防重放攻击、参数校验防越权。</p><p><br></p>"
+            "answer": "<p>接口测试和功能测试最大的区别是——接口测试除了功能逻辑，还要关注数据流转、协议规范和业务规则。</p><p><strong>我按五个维度来覆盖：</strong></p><p><strong>维度一，功能与参数覆盖。</strong>正常请求能不能返回正确的数据结构。参数组合——必填参数、可选参数、参数组合。参数类型——数字传字符串行不行、字符串超长行不行、枚举值传不在范围内的行不行。</p><p><strong>维度二，异常与容错。</strong>参数异常——缺参、多参、类型错误、格式非法。协议异常——HTTP方法用错（GET调POST）、Content-Type不匹配、请求体格式错误。鉴权异常——无Token、Token过期、伪造Token、权限不足。</p><p><strong>维度三，业务逻辑。</strong>这是接口测试区别于单元测试的核心。接口背后有业务规则——余额不足能不能下单、重复请求会不会多次扣款、状态机流转是否合法（已支付的订单不能再次支付、已取消的订单不能发货）。业务规则验证是接口测试最有价值的部分。</p><p><strong>维度四，数据一致性。</strong>接口返回200不代表数据落对了。每次调用完接口，必须查数据库确认——关键字段有没有写对、状态机变更是否正确、上下游数据是否一致。我一般在接口自动化框架里，每个接口用例后跟一段数据库断言。</p><p><strong>维度五，安全与性能基线。</strong>无鉴权能不能调、A用户能不能操作B用户的数据、敏感信息有没有加密。性能方面——响应时间在不在合理范围内、并发下数据会不会出问题。</p><p><strong>实际用例表达格式：</strong></p><pre>用例ID: API-ORDER-001\n标题: 正常下单\n前置: 用户已登录，商品库存充足\n请求: POST /api/order/create 参数\n预期:\n  状态码: 200\n  返回: order_id 不为空，status = CREATED\n  数据库: order 表有对应记录，status = CREATED</pre><p>每条用例都包含请求和数据库两层验证，这是接口测试的基本功。</p>"
           },
           {
             "num": 2,
@@ -223,18 +223,6 @@
             "title": "接口幂等性测试怎么做",
             "prep_priority": "high",
             "answer": "<p><strong>什么是幂等性：</strong>相同请求重复提交多次，结果和提交一次一样。这在金融交易系统中至关重要——网络超时导致前端重试、支付回调重复通知、MQ 消息重复消费，如果接口不幂等就会产生重复订单、重复扣款。</p><p><strong>幂等性测试方法：</strong></p><p><strong>第一，确认幂等机制：</strong>先搞清楚接口用什么方式保证幂等——唯一请求号（幂等键）、业务唯一约束、Token 机制（防重令牌）。不同的机制测试重点不同。</p><p><strong>第二，重复提交测试：</strong>同一个请求连续发 2-3 次，验证第二次开始返回跟第一次一致的结果，不重复创建资源。修改类接口（PUT/PATCH）按相同参数重复修改，验证结果一致。</p><p><strong>第三，并发重试测试：</strong>同一请求并发发 N 次（10-50并发），验证数据库只有一条记录。分布式环境下多个实例同时处理同一幂等键。在 Gate.io 余币宝测试中，发现过并发重复申购没被幂等拦截的 Bug。</p><p><strong>第四，异常恢复测试：</strong>请求处理到一半断网/超时，恢复后重试同一请求。先扣款后落单的场景——扣款成功但订单没生成，重试时不能二次扣款。</p><p><strong>第五，幂等键过期测试：</strong>如果幂等键有时效（如 24h），过期后再次请求——是正常创建新资源还是拒绝？跟产品确认预期行为。</p><p><strong>核心原则：</strong>涉及资金和资源变更的接口必须测幂等性，这是金融级测试的基本要求。</p>"
-          },
-          {
-            "num": 4,
-            "title": "接口鉴权怎么测试",
-            "prep_priority": "medium",
-            "answer": "<p><strong>常见鉴权方式：</strong>Cookie/Session 鉴权、JWT Token、API Key + Secret 签名、OAuth 2.0。</p><p><strong>测试要点：</strong></p><p><strong>无鉴权访问：</strong>不携带任何鉴权信息请求接口，验证是否返回 401 Unauthorized，而不是返回业务数据。常见遗漏——某些接口在 Controller 层加了鉴权注解但新加的接口忘了加。</p><p><strong>Token/Key 异常：</strong>过期 Token 是否返回 401——JWT 过期、Session 超时、API Key 过期。伪造 Token——篡改 JWT payload、重放旧 Token、使用其他用户的 Token。格式错误——Authorization 头格式不对、Bearer 拼错。</p><p><strong>权限分级：</strong>低权限用户调用高权限接口是否被拦截；越权访问——A 用户的 Token 操作 B 用户的数据（水平越权）；普通用户调管理员接口（垂直越权）。</p><p><strong>签名校验（API Key 方式）：</strong>签名参数缺失或顺序错误、签名算法被篡改、重放攻击——相同签名请求在有效时间外还能用吗、时间戳偏差超出允许范围。在交易所项目中，接口签名校验是资金安全的第一道防线，测试必须覆盖签名篡改和重放场景。</p><p><strong>工具：</strong>使用 Postman/Requests 手动修改鉴权参数测试异常场景。自动化脚本中用 fixture 创建不同权限级别的用户，用例按角色标注自动切换 Token。</p>"
-          },
-          {
-            "num": 5,
-            "title": "上下游接口联调测试怎么做",
-            "prep_priority": "medium",
-            "answer": "<p><strong>联调测试的难点：</strong>上下游系统往往由不同团队开发，开发进度不同步、接口协议可能变更、环境依赖复杂。最怕的是联调时才发现接口定义不一致，返工成本高。</p><p><strong>四步联调策略：</strong></p><p><strong>第一步，契约先行：</strong>在开发前先确定接口契约——请求/响应格式、字段定义、状态码、错误码。契约评审通过后再各自开发。工具上可以用 Swagger/OpenAPI 定义接口规范，自动生成文档。</p><p><strong>第二步，Mock 解耦：</strong>下游系统没开发好时，用 Mock Server（如 JSON Server、WireMock、Python flask 模拟接口）返回模拟数据。Mock 数据要覆盖正常场景和关键异常场景。注意标记测试数据来源避免跟真实系统混淆。</p><p><strong>第三步，接口自动化验证：</strong>上游系统先提测，用接口自动化框架验证请求格式、参数范围。这层通过的接口再进入联调。先单系统后联调——先各自验证自己的接口没问题，再连起来跑端到端。</p><p><strong>第四步，全链路端到端：</strong>准备贯通上下游的测试数据，模拟完整业务链路。关注点——数据在各系统间传递是否一致、状态流转是否正确、异常时是否有补偿机制（失败回滚/重试）、超时处理是否合理。</p><p><strong>实践经验：</strong>在西域供应链的 ERP 项目中，采购→入库→财务链路涉及 Odoo、WMS、用友三套系统。我的做法是先用接口自动化验证每个系统的独立接口（Mock 上下游），再跑端到端数据对账脚本比对全链路业务数据。这样大部分问题在单系统阶段就解决了，联调时间缩短了一半。</p>"
           }
         ]
       },
@@ -272,18 +260,6 @@
             "num": 5,
             "prep_priority": "low",
             "title": "APP 的推送通知测试要点有哪些"
-          },
-          {
-            "answer": "<p><strong>场景：</strong>短信链接打开 APP 指定页面、扫码打开 APP、浏览器 H5 页面唤端（Scheme/Universal Link/App Links）、其他 APP 拉起、Push 推送点击跳转。</p><p><strong>测试要点：</strong>未安装 APP 时是否正常 fallback 到 H5 或应用商店、已安装 APP 是否正常打开并跳转到指定页面、携带参数是否正确传递、连续多次唤起是否正常、不同系统版本（iOS/Android）的唤起机制差异。</p><p>在易金通 APP 测试中，我覆盖了所有外部唤端场景，有些机型只支持 Scheme 不支持 Universal Link，需要做兼容降级。</p>",
-            "num": 6,
-            "prep_priority": "low",
-            "title": "APP 的 Deep Link / 外部唤端测试怎么做"
-          },
-          {
-            "answer": "<p><strong>接口异常类型：</strong>网络超时（30s 无响应）、返回格式错误（非 JSON/字段缺失）、HTTP 错误码（4xx/5xx）、业务错误码（余额不足/风控拦截）、数据为空（列表无数据）、后端熔断（503 Service Unavailable）。</p><p><strong>APP 侧表现校验：</strong>是否有统一错误提示（不是浏览器默认报错）、超时后是否有重试机制、重复请求是否幂等、加载中状态是否合理（骨架屏/loading）、错误后页面不崩溃不白屏。</p><p><strong>测试方法：</strong>用 Charles/Fiddler 抓包修改返回数据模拟各种异常。自动化脚本构造 Mock Server 返回指定错误码和数据。</p>",
-            "num": 7,
-            "prep_priority": "medium",
-            "title": "APP 与后端接口的异常场景怎么设计"
           }
         ]
       },
@@ -321,6 +297,25 @@
             "title": "全链路压测怎么做",
             "prep_priority": "medium",
             "answer": "<p><strong>什么是全链路压测：</strong>模拟真实用户请求，从入口网关到后端服务的完整链路进行压力测试。区别于单接口压测——接口 A 的 TPS 很高但全链路跑起来可能因为依赖服务瓶颈而大幅下降。</p><p><strong>核心步骤：</strong></p><p><strong>第一，链路梳理：</strong>画出核心业务的请求链路图——请求经过哪些服务、调了哪些下游、读写哪些数据库/缓存。区分核心链路和非核心链路，压测只覆盖核心链路。</p><p><strong>第二，流量模型建模：</strong>按线上流量比例分配各场景——比如交易链路：登录 10%、下单 30%、支付 25%、查询 35%。并发数根据线上峰值换算——目标 TPS = 线上峰值 × 安全系数（1.5-2 倍）。</p><p><strong>第三，数据隔离：</strong>压测数据不能污染线上真实数据。常用策略——逻辑隔离（压测数据打标，对账/统计时过滤掉）、物理隔离（独立压测数据库）。在 Gate.io 我们使用逻辑隔离，所有压测订单带 test_ 前缀。</p><p><strong>第四，监控全覆盖：</strong>链路中每个服务的 CPU/内存/GC、数据库连接池和慢查询、缓存命中率、MQ 积压、网络 IO。Grafana 统一看板。</p><p><strong>第五，瓶颈定位与优化：</strong>逐步加压直到出现瓶颈，按分层排查法定位根因。常见瓶颈——数据库连接池打满、缓存过期导致雪崩、慢查询、同步调用阻塞。优化后重新压测验证。</p><p>全链路压测的核心价值在于发现单接口压测发现不了的问题——服务间调用超时、依赖瓶颈、数据一致性问题。</p>"
+          }
+        ]
+      },
+      {
+        "id": "sub-6-other",
+        "title": "综合",
+        "icon": "📌",
+        "questions": [
+          {
+            "answer": "<p style=\"margin: 6px 0px; color: rgb(68, 68, 68); font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, sans-serif; font-size: 14px;\">3-5年我计划在AI+测试方向深耕，结合全链路测试经验和AI平台落地经验，成为能搭建企业级AI测试体系的人。</p><p style=\"margin: 6px 0px; color: rgb(68, 68, 68); font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, sans-serif; font-size: 14px;\"><strong>观点：</strong>AI在测试行业的应用还在早期，从用例生成到缺陷分析各环节都有巨大优化空间。</p><p style=\"margin: 6px 0px; color: rgb(68, 68, 68); font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, sans-serif; font-size: 14px;\"><strong>理由：</strong>第一，行业趋势上大模型能力快速提升，AI在测试领域从辅助工具变成核心能力。第二，个人特质上我对新技术有热情愿深入研究和落地。第三，提升自己的差异化竞争能力</p><p style=\"margin: 6px 0px; color: rgb(68, 68, 68); font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, sans-serif; font-size: 14px;\"><br></p><p style=\"margin: 6px 0px; color: rgb(68, 68, 68); font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, sans-serif; font-size: 14px;\"><strong>实践：</strong>短期1-2年深入打磨两个方向——多Agent协作测试架构（需求理解/用例生成/评审/执行各自独立Agent相互验证）和AI生产分析（从被动响应到主动发现异常）。中期3-5年主导更大规模AI测试体系搭建，从单平台扩展到多业务线的AI测试中台。同时关注AI产品质量保障新方向——LLM评测、Agent行为验证、AI幻觉检测。</p>",
+            "num": 10,
+            "prep_priority": "medium",
+            "title": "3-5 年职业规划"
+          },
+          {
+            "answer": "<p><strong>优点：</strong>我对新技术新事物比较感兴趣，会主动去落地验证。想办法把它用到实际工作中</p><p><strong>缺点：目前来讲的话</strong>目前 AI 测试平台这一块，下沉的基础设施部分——多线程并发调度、Docker 容器化部署、分布式执行——接触得还比较少。</p>",
+            "num": 11,
+            "prep_priority": "medium",
+            "title": "你的优点和缺点是什么"
           }
         ]
       }
@@ -442,25 +437,6 @@
             "title": "Linux 日志分析与性能排查"
           }
         ]
-      },
-      {
-        "id": "sub-6-other",
-        "title": "综合",
-        "icon": "📌",
-        "questions": [
-          {
-            "answer": "<p>面试官直接打断：「能来点干货吗？结合你自己的特质说一些你特有的东西，而不是说 100 个人可以用 100 都用这一套回答。」</p><p><strong>原因：</strong>最初说「想在 AI 测试领域深耕」「跟上时代发展」——换任何一个人都能说，没有个人辨识度。</p><p><strong>修正后的回答逻辑：</strong></p><p>「我的职业规划围绕 AI 测试体系升级展开：</p><p><strong>短期 1-2 年：</strong>把现有的 AI 测试从单模块升级为多 Agent 协作架构。需求理解 Agent、用例生成 Agent、评审 Agent、执行 Agent 各自独立，评审发现问题直接打回修改减少人工介入。这个方向已经在调研 LangGraph 了。</p><p><strong>中期 3-5 年：</strong>从单平台扩展到多业务线的 AI 测试中台。同时关注 AI 质量保障新方向——LLM 输出评测、Agent 行为正确性验证、AI 幻觉检测的自动化。</p><p>我的差异化优势在于既有传统测试全链路经验（功能→接口→性能→自动化），又有 AI 平台从 0 到 1 的实战经验，两者结合能做出真正落地的 AI 测试体系。」</p>",
-            "num": 10,
-            "prep_priority": "medium",
-            "title": "3-5 年职业规划"
-          },
-          {
-            "answer": "<p><strong>优点一：</strong>对新技术的快速学习落地能力。browser-use 从了解到完成集成上线大约两周——第一周学习框架和跑 Demo，第二周做国产模型适配、新增 Controller 操作、配置页面开发。过程中踩了 11 个 monkey-patch 的坑都记录下来沉淀为文档。</p><p><strong>优点二：</strong>业务适应能力强。C 端金融 APP（易金通）→ B 端供应链 ERP（西域）→ 数字货币交易所（Gate.io），三个完全不同领域都能快速上手。每个行业的业务逻辑和测试重点不同，我能在 1-2 个月内从熟悉业务到独立负责测试。</p><p><strong>缺点一（面试最大收获）：</strong>对底层基础设施关注不够。之前更关注 AI 模块的功能实现，对 CI/CD 并发架构、Docker 容器化、分布式执行缺乏主动学习的意识。正在系统补 Docker 和 Selenium Grid 分布式方案。</p><p><strong>缺点二：</strong>独立推进项目时的规划能力还需提升。更多是接到任务能高质量完成，在从 0 到 1 自己规划方向方面经验还不足。已经在工作中主动承担更多规划职责来锻炼。</p><p><strong>关键：</strong>每个缺点都跟了具体的改进动作——不是只承认短板，而是展示自我迭代的能力。</p>",
-            "num": 11,
-            "prep_priority": "medium",
-            "title": "你的两个优点和两个缺点是什么"
-          }
-        ]
       }
     ]
   },
@@ -476,7 +452,7 @@
         "icon": "🏢",
         "questions": [
           {
-            "answer": "<p style=\"margin: 6px 0px; color: rgb(68, 68, 68); font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, sans-serif; font-size: 14px;\">西域智慧供应链是一个供应链和用户之间的集采平台，主要对接供应链和客户。核心流程就是下单、发货、回款。</p><p style=\"margin: 6px 0px; color: rgb(68, 68, 68); font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, sans-serif; font-size: 14px;\">然后从订单来源开始 我们的订单包括商城官网(www)、OPC（销售端操作平台，可手工录单）、国央企平台对接等。所有订单来源汇总到opc（订单中心），销售在opc确认订单后，经过Kafka服务分发到Odoo后端ERP&nbsp; 然后进行订单的接单，发货等流程，odoo 系统负责我们sku 的 库存，采购流程</p><p style=\"margin: 6px 0px; color: rgb(68, 68, 68); font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, sans-serif; font-size: 14px;\">我负责raxwell 西域自主品牌，还有odoos苏州主题的 Odoo平台的需求迭代，包括采购订单、销售订单、库存管理、财务报表开票请款等模块。</p>",
+            "answer": "<p style=\"margin: 6px 0px; color: rgb(68, 68, 68); font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, sans-serif; font-size: 14px;\">西域智慧供应链是一个供应链和用户之间的集采平台，主要对接供应链和客户。核心流程就是下单、发货、回款。</p><p style=\"margin: 6px 0px; color: rgb(68, 68, 68); font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, sans-serif; font-size: 14px;\">然后从订单来源开始 我们的订单包括商城官网(www)、OPC（销售端操作平台，可手工录单）、国央企平台对接等。所有订单来源汇总到opc（订单中心），销售在opc确认订单后，经过Kafka服务分发到Odoo后端ERP&nbsp; 然后进行订单的接单，发货等流程，odoo 系统负责我们sku 的 库存的管理采购，采购流程</p><p style=\"margin: 6px 0px; color: rgb(68, 68, 68); font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, sans-serif; font-size: 14px;\">我负责raxwell 西域自主品牌，还有odoos苏州主体的 Odoo平台的需求迭代，包括采购订单、销售订单、库存管理、财务报表开票请款等模块。</p>",
             "num": 1,
             "title": "介绍erp系统"
           },
