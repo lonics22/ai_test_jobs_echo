@@ -20,15 +20,6 @@
   .nav-cats a[data-tab="cat-2"] { background: #fff3e0; color: #e65100; }
   .nav-cats a[data-tab="cat-2"]:hover,
   .nav-cats a[data-tab="cat-2"].active { background: #e65100; color: #fff; }
-  .nav-cats a[data-tab="cat-3"] { background: #e0f2f1; color: #00796b; }
-  .nav-cats a[data-tab="cat-3"]:hover,
-  .nav-cats a[data-tab="cat-3"].active { background: #00796b; color: #fff; }
-  .nav-cats a[data-tab="cat-4"] { background: #e8eaf6; color: #3f51b5; }
-  .nav-cats a[data-tab="cat-4"]:hover,
-  .nav-cats a[data-tab="cat-4"].active { background: #3f51b5; color: #fff; }
-  .nav-cats a[data-tab="cat-5"] { background: #fbe9e7; color: #d84315; }
-  .nav-cats a[data-tab="cat-5"]:hover,
-  .nav-cats a[data-tab="cat-5"].active { background: #d84315; color: #fff; }
   .nav-cats a[data-tab="cat-6"] { background: #e8f5e9; color: #2e7d32; }
   .nav-cats a[data-tab="cat-6"]:hover,
   .nav-cats a[data-tab="cat-6"].active { background: #2e7d32; color: #fff; }
@@ -46,9 +37,6 @@
   section { display: none; margin-bottom: 40px; padding: 20px 16px; border-radius: 14px; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.06); border-left: 4px solid #1a73e8; }
   section.active { display: block; }
   section#cat-2 { border-left-color: #e65100; }
-  section#cat-3 { border-left-color: #00796b; }
-  section#cat-4 { border-left-color: #3f51b5; }
-  section#cat-5 { border-left-color: #d84315; }
   section#cat-6 { border-left-color: #2e7d32; }
   section#cat-7 { border-left-color: #7b1fa2; }
   section#cat-8 { border-left-color: #c62828; }
@@ -58,18 +46,12 @@
   section.collapsed h2 { margin-bottom: 0; }
   section.collapsed .cat-body { display: none; }
   section#cat-2 h2 { color: #e65100; }
-  section#cat-3 h2 { color: #00796b; }
-  section#cat-4 h2 { color: #3f51b5; }
-  section#cat-5 h2 { color: #d84315; }
   section#cat-6 h2 { color: #2e7d32; }
   section#cat-7 h2 { color: #7b1fa2; }
   section#cat-8 h2 { color: #c62828; }
   section#cat-record h2 { color: #f57f17; }
   section h2 .badge { font-size: 12px; background: #e8f0fe; color: #1a73e8; padding: 1px 10px; border-radius: 12px; font-weight: 400; }
   section#cat-2 .badge { background: #fff3e0; color: #e65100; }
-  section#cat-3 .badge { background: #e0f2f1; color: #00796b; }
-  section#cat-4 .badge { background: #e8eaf6; color: #3f51b5; }
-  section#cat-5 .badge { background: #fbe9e7; color: #d84315; }
   section#cat-6 .badge { background: #e8f5e9; color: #2e7d32; }
   section#cat-7 .badge { background: #f3e5f5; color: #7b1fa2; }
   section#cat-8 .badge { background: #ffebee; color: #c62828; }
@@ -106,6 +88,43 @@
   .load-error { text-align: center; padding: 40px 20px; color: #d32f2f; font-size: 15px; }
   @media (max-width: 640px) { .header h1 { font-size: 22px; } summary { font-size: 14px; } .q-body { padding: 0 12px 12px 16px; } }
 
+  /* ── 子分组 ── */
+  .subcat-block { margin-bottom: 14px; border: 1px solid #e8e8e8; border-radius: 10px; overflow: hidden; background: #fcfcfc; }
+  .subcat-header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: #f5f5f5; cursor: pointer; user-select: none; font-size: 15px; font-weight: 600; border-bottom: 1px solid #e8e8e8; transition: .15s; }
+  .subcat-header:hover { background: #eee; }
+  .subcat-header .collapse-icon { font-size: 12px; transition: transform .2s; color: #999; }
+  .subcat-block.collapsed .subcat-header { border-bottom: none; }
+  .subcat-block.collapsed .subcat-body { display: none; }
+  .subcat-header .subcat-badge { font-size: 12px; background: #e0e0e0; color: #666; padding: 1px 10px; border-radius: 12px; font-weight: 400; margin-left: 4px; }
+  .subcat-body { padding: 8px 10px; }
+  .subcat-body .add-q-wrapper { margin-top: 8px; }
+  .subcat-body .add-q-wrapper .btn-add-q { padding: 6px 20px; font-size: 13px; }
+  .edit-mode .subcat-edit-controls { display: inline-flex; }
+  .subcat-edit-controls { display: none; gap: 4px; margin-left: auto; flex-shrink: 0; }
+  .btn-edit-subcat, .btn-del-subcat { padding: 2px 8px; font-size: 11px; border: none; border-radius: 4px; cursor: pointer; transition: .15s; }
+  .btn-edit-subcat { background: #e8f0fe; color: #1a73e8; }
+  .btn-edit-subcat:hover { background: #d2e3fc; }
+  .btn-del-subcat { background: #ffebee; color: #c62828; }
+  .btn-del-subcat:hover { background: #ffcdd2; }
+  .btn-add-subcat { padding: 8px 20px; border: 2px dashed #1a73e8; border-radius: 8px; background: transparent; color: #1a73e8; font-size: 13px; cursor: pointer; transition: .15s; font-weight: 500; width: 100%; }
+  .btn-add-subcat:hover { background: #e8f0fe; }
+
+  /* ── 子分组颜色 ── */
+  .subcat-header { border-left: 3px solid #ccc; }
+  .subcat-header[data-subcat^="sub-ai"] { border-left-color: #1a73e8; }
+  .subcat-header[data-subcat="sub-ai-agent"] { border-left-color: #7b1fa2; background: #f3e5f5; }
+  .subcat-header[data-subcat="sub-ai-gen"] { border-left-color: #0d47a1; background: #e8eaf6; }
+  .subcat-header[data-subcat="sub-test-base"] { border-left-color: #e65100; background: #fff3e0; }
+  .subcat-header[data-subcat="sub-test-api"] { border-left-color: #00796b; background: #e0f2f1; }
+  .subcat-header[data-subcat="sub-test-app"] { border-left-color: #3f51b5; background: #e8eaf6; }
+  .subcat-header[data-subcat="sub-test-perf"] { border-left-color: #d84315; background: #fbe9e7; }
+  .subcat-header[data-subcat="sub-6-db"] { border-left-color: #2e7d32; background: #e8f5e9; }
+  .subcat-header[data-subcat="sub-6-py"] { border-left-color: #1565c0; background: #e3f2fd; }
+  .subcat-header[data-subcat="sub-6-linux"] { border-left-color: #f57f17; background: #fff8e1; }
+  .subcat-header[data-subcat="sub-6-other"] { border-left-color: #6a1b9a; background: #f3e5f5; }
+  .subcat-header[data-subcat="sub-biz-other"] { border-left-color: #37474f; background: #eceff1; }
+  .subcat-header[data-subcat="sub-biz-ybb"] { border-left-color: #c62828; background: #ffebee; }
+
   /* ── 编辑模式 ── */
   .edit-mode .drag-handle { display: inline-flex; }
   .edit-mode .edit-controls { display: flex; }
@@ -141,6 +160,11 @@
   .btn-modal-save:hover { background: #0d47a1; }
   .btn-modal-cancel { background: #f5f5f5; color: #333; }
   .btn-modal-cancel:hover { background: #e0e0e0; }
+  .editor-toolbar { display: flex; gap: 4px; padding: 6px 8px; background: #f5f5f5; border: 1px solid #e0e0e0; border-bottom: none; border-radius: 8px 8px 0 0; flex-wrap: wrap; }
+  .editor-toolbar button { padding: 4px 12px; border: 1px solid #ddd; background: #fff; border-radius: 4px; cursor: pointer; font-size: 13px; }
+  .editor-toolbar button:hover { background: #e8f0fe; }
+  .rich-editor { width: 100%; min-height: 250px; padding: 10px 14px; border: 2px solid #e0e0e0; border-radius: 0 0 8px 8px; font-size: 13px; font-family: 'Consolas', 'Courier New', monospace; outline: none; box-sizing: border-box; line-height: 1.6; overflow-y: auto; }
+  .rich-editor:focus { border-color: #1a73e8; }
   .hit-counter {
     display: inline-flex; align-items: center; gap: 2px;
     font-size: 11px; padding: 1px 8px; border-radius: 10px;
@@ -169,9 +193,6 @@
   <div class="nav-cats">
     <a data-tab="cat-1" class="active">🤖 AI 技术深度</a>
     <a data-tab="cat-2">🧪 测试基础</a>
-    <a data-tab="cat-3">🔗 接口测试</a>
-    <a data-tab="cat-4">📱 APP测试</a>
-    <a data-tab="cat-5">⚡ 性能测试</a>
     <a data-tab="cat-6">💻 Python-数据库-Linux</a>
     <a data-tab="cat-7">🏢 业务领域</a>
     <a data-tab="cat-8">🎙️ 面试记录</a>
@@ -201,8 +222,13 @@
       <h3 id="modal-heading">新增题目</h3>
       <label for="modal-title-input">题目标题</label>
       <input type="text" id="modal-title-input" placeholder="输入题目标题..." />
-      <label for="modal-answer-input">题目答案（HTML 格式）</label>
-      <textarea id="modal-answer-input" placeholder="输入答案 HTML 内容，支持 &lt;p&gt;、&lt;pre&gt;、&lt;strong&gt; 等标签"></textarea>
+      <label>题目答案</label>
+      <div class="editor-toolbar">
+        <button type="button" data-cmd="bold" title="加粗"><b>B</b></button>
+        <button type="button" data-cmd="italic" title="斜体"><i>I</i></button>
+        <button type="button" data-cmd="underline" title="下划线"><u>U</u></button>
+      </div>
+      <div id="modal-answer-input" class="rich-editor" contenteditable="true"></div>
       <div class="modal-actions">
         <button class="btn-modal-cancel" id="modal-cancel">取消</button>
         <button class="btn-modal-save" id="modal-save">保存</button>
@@ -307,39 +333,68 @@
     var html = '<section id="' + cat.id + '">';
     html += '<h2><span class="collapse-icon">▼</span> ' + cat.icon + ' ' + escapeHtml(cat.title) + ' <span class="badge">' + escapeHtml(cat.badge) + '</span></h2>';
     html += '<div class="cat-body">';
-    // Split questions into segments at reflection divider (cat-8 only)
-    var segments = [[]];
-    for (var q = 0; q < cat.questions.length; q++) {
-      if (cat.id === 'cat-8' && cat.questions[q].num >= 14 && segments.length === 1) {
-        segments.push([]);
+
+    if (cat.subcategories) {
+      // 子分组模式
+      for (var s = 0; s < cat.subcategories.length; s++) {
+        var sc = cat.subcategories[s];
+        html += '<div class="subcat-block">';
+        html += '<div class="subcat-header" data-subcat="' + sc.id + '">';
+        html += '<span class="collapse-icon">▼</span> ';
+        html += sc.icon + ' ' + escapeHtml(sc.title);
+        html += ' <span class="subcat-badge">' + sc.questions.length + '题</span>';
+        html += '<span class="subcat-edit-controls">';
+        html += '<button class="btn-edit-subcat" data-cat="' + cat.id + '" data-subcat="' + sc.id + '" data-title="' + escapeHtml(sc.title) + '" data-icon="' + sc.icon + '">编辑</button>';
+        html += '<button class="btn-del-subcat" data-cat="' + cat.id + '" data-subcat="' + sc.id + '">删除</button>';
+        html += '</span>';
+        html += '</div>';
+        html += '<div class="subcat-body">';
+        html += '<div class="q-list">';
+        for (var q = 0; q < sc.questions.length; q++) {
+          html += renderQuestion(cat.id, sc.questions[q], false, sc.id);
+        }
+        html += '</div>';
+        html += '<div class="add-q-wrapper"><button class="btn-add-q" data-cat-id="' + cat.id + '" data-subcat-id="' + sc.id + '">+ 新增题目</button></div>';
+        html += '</div></div>';
       }
-      segments[segments.length - 1].push(cat.questions[q]);
+      html += '<div class="add-q-wrapper"><button class="btn-add-subcat" data-cat-id="' + cat.id + '">+ 新增子分组</button></div>';
+    } else {
+      // 普通模式（无子分组）
+      var segments = [[]];
+      for (var q = 0; q < cat.questions.length; q++) {
+        if (cat.id === 'cat-8' && cat.questions[q].num >= 14 && segments.length === 1) {
+          segments.push([]);
+        }
+        segments[segments.length - 1].push(cat.questions[q]);
+      }
+      for (var s = 0; s < segments.length; s++) {
+        html += '<div class="q-list">';
+        for (var q = 0; q < segments[s].length; q++) {
+          html += renderQuestion(cat.id, segments[s][q], cat.id === 'cat-8' && segments[s][q].num >= 14);
+        }
+        html += '</div>';
+        if (s === 0 && segments.length > 1) {
+          html += '<div class="reflection-divider"><span class="icon">📌</span> 面试反思与改进建议</div>';
+        }
+      }
+      html += '<div class="add-q-wrapper"><button class="btn-add-q" data-cat-id="' + cat.id + '">+ 新增题目</button></div>';
     }
-    for (var s = 0; s < segments.length; s++) {
-      html += '<div class="q-list">';
-      for (var q = 0; q < segments[s].length; q++) {
-        html += renderQuestion(cat.id, segments[s][q], cat.id === 'cat-8' && segments[s][q].num >= 14);
-      }
-      html += '</div>';
-      if (s === 0 && segments.length > 1) {
-        html += '<div class="reflection-divider"><span class="icon">📌</span> 面试反思与改进建议</div>';
-      }
-    }
-    html += '<div class="add-q-wrapper"><button class="btn-add-q" data-cat-id="' + cat.id + '">+ 新增题目</button></div>';
+
     html += '</div></section>';
     return html;
   }
 
-  function renderQuestion(catId, q, isReflection) {
+  function renderQuestion(catId, q, isReflection, subcatId) {
     var hitKey = getHitKey(catId, q.num);
     var hitVal = loadHit(hitKey);
     var hitLevel = getHitLevel(hitVal);
     var cls = isReflection ? ' class="reflection-q"' : '';
     var tagHtml = isReflection ? '<span class="tag">改进点</span>' : '';
     var hitHtml = '<span class="hit-counter lv' + hitLevel + '" data-hit-key="' + hitKey + '" title="左键+1，右键重置">' + hitVal + '次提到</span>';
+    var subcatAttr = subcatId ? ' data-subcat="' + subcatId + '"' : '';
     var editHtml = '<div class="edit-controls">' +
-      '<button class="btn-edit" data-cat="' + catId + '" data-num="' + q.num + '">编辑</button>' +
-      '<button class="btn-del" data-cat="' + catId + '" data-num="' + q.num + '">删除</button>' +
+      '<button class="btn-edit" data-cat="' + catId + '" data-num="' + q.num + '"' + subcatAttr + '>编辑</button>' +
+      '<button class="btn-del" data-cat="' + catId + '" data-num="' + q.num + '"' + subcatAttr + '>删除</button>' +
     '</div>';
     var dragHtml = '<span class="drag-handle">⋮⋮</span>';
     return '<details' + cls + ' data-q-num="' + q.num + '">' +
@@ -347,6 +402,42 @@
       '<div class="q-body">' + q.answer + '</div>' +
       editHtml +
     '</details>';
+  }
+
+  // ── 辅助函数 ──
+  function getTotalCount(cat) {
+    if (cat.subcategories) {
+      var t = 0;
+      for (var s = 0; s < cat.subcategories.length; s++) t += cat.subcategories[s].questions.length;
+      return t;
+    }
+    return cat.questions ? cat.questions.length : 0;
+  }
+
+  function findQuestion(cat, num, subcatId) {
+    if (subcatId) {
+      for (var s = 0; s < (cat.subcategories || []).length; s++) {
+        if (cat.subcategories[s].id === subcatId) {
+          for (var q = 0; q < cat.subcategories[s].questions.length; q++) {
+            if (cat.subcategories[s].questions[q].num === num) return cat.subcategories[s].questions[q];
+          }
+        }
+      }
+      return null;
+    }
+    for (var q = 0; q < (cat.questions || []).length; q++) {
+      if (cat.questions[q].num === num) return cat.questions[q];
+    }
+    return null;
+  }
+
+  function getSubcatIdFromList(list) {
+    var block = list.closest('.subcat-block');
+    if (block) {
+      var hdr = block.querySelector('.subcat-header');
+      return hdr ? hdr.getAttribute('data-subcat') : null;
+    }
+    return null;
   }
 
   // ── 搜索（仅当前 Tab） ──
@@ -366,6 +457,18 @@
         setTimeout(function() { hitEl.classList.remove('pulse'); }, 200);
         return;
       }
+      // Subcategory collapse/expand
+      var subcatHeader = e.target.closest('.subcat-header');
+      if (subcatHeader) {
+        var block = subcatHeader.closest('.subcat-block');
+        if (block) {
+          block.classList.toggle('collapsed');
+          var icon = subcatHeader.querySelector('.collapse-icon');
+          if (icon) icon.textContent = block.classList.contains('collapsed') ? '▶' : '▼';
+        }
+        return;
+      }
+
       // Category collapse/expand
       var h2 = e.target.closest('section h2');
       if (!h2) return;
@@ -435,35 +538,48 @@
   }
 
   function filterQuestions(query) {
-    // 找到当前激活的 section
     var curSection = container.querySelector('#' + currentTab);
     if (!curSection) return;
 
-    // 找到当前分类在 allData 中的索引
-    var catIndex = -1;
+    var cat = null;
     for (var c = 0; c < allData.length; c++) {
-      if (allData[c].id === currentTab) {
-        catIndex = c;
-        break;
-      }
+      if (allData[c].id === currentTab) { cat = allData[c]; break; }
     }
-    if (catIndex === -1) return;
+    if (!cat) return;
 
-    var cat = allData[catIndex];
-    var details = curSection.querySelectorAll('details');
     var catHasVisible = false;
 
-    for (var q = 0; q < details.length; q++) {
-      var question = cat.questions[q];
-      if (!question) {
-        details[q].style.display = 'none';
-        continue;
+    if (cat.subcategories) {
+      for (var s = 0; s < cat.subcategories.length; s++) {
+        var sc = cat.subcategories[s];
+        var block = curSection.querySelector('.subcat-header[data-subcat="' + sc.id + '"]');
+        if (!block) continue;
+        var body = block.nextElementSibling;
+        if (!body) continue;
+        var details = body.querySelectorAll('details');
+        var scHas = false;
+        for (var q = 0; q < details.length; q++) {
+          var qData = sc.questions[q];
+          if (!qData) { details[q].style.display = 'none'; continue; }
+          var match = !query ||
+            qData.title.toLowerCase().indexOf(query) !== -1 ||
+            qData.answer.toLowerCase().indexOf(query) !== -1;
+          details[q].style.display = match ? '' : 'none';
+          if (match) scHas = true;
+        }
+        if (scHas) catHasVisible = true;
       }
-      var match = !query ||
-        question.title.toLowerCase().indexOf(query) !== -1 ||
-        question.answer.toLowerCase().indexOf(query) !== -1;
-      details[q].style.display = match ? '' : 'none';
-      if (match) catHasVisible = true;
+    } else {
+      var details = curSection.querySelectorAll('details');
+      for (var q = 0; q < details.length; q++) {
+        var qData = cat.questions[q];
+        if (!qData) { details[q].style.display = 'none'; continue; }
+        var match = !query ||
+          qData.title.toLowerCase().indexOf(query) !== -1 ||
+          qData.answer.toLowerCase().indexOf(query) !== -1;
+        details[q].style.display = match ? '' : 'none';
+        if (match) catHasVisible = true;
+      }
     }
 
     // 在当前 Tab 内显示/隐藏 no-results
@@ -484,7 +600,7 @@
   function updateFooterCount(data) {
     var total = 0;
     for (var c = 0; c < data.length; c++) {
-      total += data[c].questions.length;
+      total += getTotalCount(data[c]);
     }
     if (footerCount) footerCount.textContent = total;
   }
@@ -506,19 +622,21 @@
   var modalMode = '';       // 'add' | 'edit'
   var modalCatId = '';
   var modalQNum = 0;
+  var modalSubcatId = '';
 
   var overlay = document.getElementById('modal-overlay');
   var modalTitleInput = document.getElementById('modal-title-input');
   var modalAnswerInput = document.getElementById('modal-answer-input');
   var modalHeading = document.getElementById('modal-heading');
 
-  function openModal(mode, catId, num, title, answer) {
+  function openModal(mode, catId, num, title, answer, subcatId) {
     modalMode = mode;
     modalCatId = catId;
     modalQNum = num || 0;
+    modalSubcatId = subcatId || '';
     modalHeading.textContent = mode === 'add' ? '新增题目' : '编辑题目';
     modalTitleInput.value = title || '';
-    modalAnswerInput.value = answer || '';
+    modalAnswerInput.innerHTML = answer || '';
     overlay.classList.add('active');
     modalTitleInput.focus();
   }
@@ -526,12 +644,12 @@
   function closeModal() {
     overlay.classList.remove('active');
     modalTitleInput.value = '';
-    modalAnswerInput.value = '';
+    modalAnswerInput.innerHTML = '';
   }
 
   function saveModal() {
     var title = modalTitleInput.value.trim();
-    var answer = modalAnswerInput.value.trim();
+    var answer = modalAnswerInput.innerHTML.trim();
     if (!title) { alert('请输入题目标题'); return; }
     if (!answer) { alert('请输入题目答案'); return; }
 
@@ -544,10 +662,12 @@
       method = 'PUT';
     }
 
+    var bodyData = { title: title, answer: answer };
+    if (modalSubcatId) bodyData.subcat_id = modalSubcatId;
     fetch(url, {
       method: method,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title: title, answer: answer })
+      body: JSON.stringify(bodyData)
     })
     .then(function(r) {
       if (!r.ok) return r.json().then(function(e) { throw new Error(e.error || '保存失败'); });
@@ -575,11 +695,18 @@
   // ── 弹窗事件 ──
   document.getElementById('modal-save').addEventListener('click', saveModal);
   document.getElementById('modal-cancel').addEventListener('click', closeModal);
-  overlay.addEventListener('click', function(e) {
-    if (e.target === overlay) closeModal();
+  // 仅通过取消按钮关闭弹框，点击遮罩不进行操作
+  document.querySelector('.editor-toolbar').addEventListener('click', function(e) {
+    var btn = e.target.closest('button');
+    if (!btn || !btn.dataset.cmd) return;
+    e.preventDefault();
+    document.execCommand(btn.dataset.cmd, false, null);
+    modalAnswerInput.focus();
   });
 
   // ── SortableJS 拖拽排序 ──
+  var allSortables = [];
+
   function initSortable() {
     destroySortable();
     if (typeof Sortable === 'undefined') return;
@@ -588,40 +715,33 @@
     var lists = curSection.querySelectorAll('.q-list');
     for (var i = 0; i < lists.length; i++) {
       (function(list) {
+        var subcatId = getSubcatIdFromList(list);
         var s = new Sortable(list, {
           handle: '.drag-handle',
           animation: 150,
           ghostClass: 'sortable-ghost',
           onEnd: function() {
-            saveReorder();
+            saveReorderForList(list, subcatId);
           }
         });
-        currentSortable = s;
+        allSortables.push(s);
       })(lists[i]);
     }
   }
 
   function destroySortable() {
-    if (currentSortable) {
-      if (typeof currentSortable.destroy === 'function') currentSortable.destroy();
-      currentSortable = null;
-    }
-  }
-
-  function saveReorder() {
-    var curSection = container.querySelector('#' + currentTab);
-    if (!curSection) return;
-    var catId = curSection.id;
-    var lists = curSection.querySelectorAll('.q-list');
-
-    // 收集所有 q-list 中 details 的 data-q-num（保留 DOM 顺序）
-    var detailEls = [];
-    for (var i = 0; i < lists.length; i++) {
-      var items = lists[i].querySelectorAll('details[data-q-num]');
-      for (var j = 0; j < items.length; j++) {
-        detailEls.push(items[j]);
+    for (var i = 0; i < allSortables.length; i++) {
+      if (allSortables[i] && typeof allSortables[i].destroy === 'function') {
+        allSortables[i].destroy();
       }
     }
+    allSortables = [];
+  }
+
+  function saveReorderForList(list, subcatId) {
+    var curSection = list.closest('section');
+    if (!curSection) return;
+    var catId = curSection.id;
 
     var cat = null;
     for (var i = 0; i < allData.length; i++) {
@@ -629,21 +749,21 @@
     }
     if (!cat) return;
 
+    var detailEls = list.querySelectorAll('details[data-q-num]');
     var newQuestions = [];
     for (var j = 0; j < detailEls.length; j++) {
       var num = parseInt(detailEls[j].getAttribute('data-q-num'), 10);
-      for (var k = 0; k < cat.questions.length; k++) {
-        if (cat.questions[k].num === num) {
-          newQuestions.push(cat.questions[k]);
-          break;
-        }
-      }
+      var q = findQuestion(cat, num, subcatId);
+      if (q) newQuestions.push(q);
     }
+
+    var bodyData = { questions: newQuestions };
+    if (subcatId) bodyData.subcat_id = subcatId;
 
     fetch('/api/reorder/' + catId, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ questions: newQuestions })
+      body: JSON.stringify(bodyData)
     })
     .then(function(r) {
       if (!r.ok) return r.json().then(function(e) { throw new Error(e.error || '排序失败'); });
@@ -675,38 +795,43 @@
       });
   }
 
-  // ── 编辑/删除/新增按钮事件 ──
+  // ── 编辑/删除/新增/子分组按钮事件 ──
   container.addEventListener('click', function(e) {
-    // 编辑按钮
+    // 编辑题目
     var editBtn = e.target.closest('.btn-edit');
     if (editBtn) {
       e.preventDefault();
       e.stopPropagation();
       var catId = editBtn.getAttribute('data-cat');
       var num = parseInt(editBtn.getAttribute('data-num'), 10);
+      var subcatId = editBtn.getAttribute('data-subcat') || '';
       var cat = null;
       for (var i = 0; i < allData.length; i++) {
         if (allData[i].id === catId) { cat = allData[i]; break; }
       }
       if (!cat) return;
-      var q = null;
-      for (var j = 0; j < cat.questions.length; j++) {
-        if (cat.questions[j].num === num) { q = cat.questions[j]; break; }
-      }
+      var q = findQuestion(cat, num, subcatId);
       if (!q) return;
-      openModal('edit', catId, num, q.title, q.answer);
+      openModal('edit', catId, num, q.title, q.answer, subcatId);
       return;
     }
 
-    // 删除按钮
+    // 删除题目
     var delBtn = e.target.closest('.btn-del');
     if (delBtn) {
       e.preventDefault();
       e.stopPropagation();
       var catId = delBtn.getAttribute('data-cat');
       var num = parseInt(delBtn.getAttribute('data-num'), 10);
+      var subcatId = delBtn.getAttribute('data-subcat') || '';
       if (!confirm('确定删除第 ' + num + ' 题？此操作不可恢复。')) return;
-      fetch('/api/questions/' + catId + '/' + num, { method: 'DELETE' })
+      var bodyData = {};
+      if (subcatId) bodyData.subcat_id = subcatId;
+      fetch('/api/questions/' + catId + '/' + num, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(bodyData)
+      })
         .then(function(r) {
           if (!r.ok) return r.json().then(function(e) { throw new Error(e.error || '删除失败'); });
           reRenderCategories();
@@ -717,12 +842,78 @@
       return;
     }
 
-    // 新增按钮
+    // 新增题目
     var addBtn = e.target.closest('.btn-add-q');
     if (addBtn) {
       e.preventDefault();
       var catId = addBtn.getAttribute('data-cat-id');
-      openModal('add', catId);
+      var subcatId = addBtn.getAttribute('data-subcat-id') || '';
+      openModal('add', catId, 0, '', '', subcatId);
+      return;
+    }
+
+    // 编辑子分组
+    var editSubcat = e.target.closest('.btn-edit-subcat');
+    if (editSubcat) {
+      e.preventDefault();
+      e.stopPropagation();
+      var catId = editSubcat.getAttribute('data-cat');
+      var scId = editSubcat.getAttribute('data-subcat');
+      var title = editSubcat.getAttribute('data-title');
+      var icon = editSubcat.getAttribute('data-icon');
+      var newTitle = prompt('编辑子分组标题:', title);
+      if (newTitle && newTitle.trim()) {
+        var newIcon = prompt('编辑子分组图标 (如 🗄️ 🐍 🐧):', icon);
+        fetch('/api/subcategories/' + catId + '/' + scId, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title: newTitle.trim(), icon: newIcon || icon })
+        })
+        .then(function(r) {
+          if (!r.ok) return r.json().then(function(e) { throw new Error(e.error); });
+          reRenderCategories();
+        })
+        .catch(function(err) { alert('编辑失败: ' + err.message); });
+      }
+      return;
+    }
+
+    // 删除子分组
+    var delSubcat = e.target.closest('.btn-del-subcat');
+    if (delSubcat) {
+      e.preventDefault();
+      e.stopPropagation();
+      var catId = delSubcat.getAttribute('data-cat');
+      var scId = delSubcat.getAttribute('data-subcat');
+      if (!confirm('确定删除此子分组及其所有题目？')) return;
+      fetch('/api/subcategories/' + catId + '/' + scId, { method: 'DELETE' })
+        .then(function(r) {
+          if (!r.ok) return r.json().then(function(e) { throw new Error(e.error); });
+          reRenderCategories();
+        })
+        .catch(function(err) { alert('删除失败: ' + err.message); });
+      return;
+    }
+
+    // 新增子分组
+    var addSubcat = e.target.closest('.btn-add-subcat');
+    if (addSubcat) {
+      e.preventDefault();
+      var catId = addSubcat.getAttribute('data-cat-id');
+      var title = prompt('输入子分组标题:');
+      if (title && title.trim()) {
+        var icon = prompt('输入子分组图标 (如 🗄️):', '📁');
+        fetch('/api/subcategories/' + catId, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title: title.trim(), icon: icon || '📁' })
+        })
+        .then(function(r) {
+          if (!r.ok) return r.json().then(function(e) { throw new Error(e.error); });
+          reRenderCategories();
+        })
+        .catch(function(err) { alert('新增失败: ' + err.message); });
+      }
       return;
     }
   });
